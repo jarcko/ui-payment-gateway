@@ -7,8 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SecurityComponent implements OnInit {
   enabled = false;
-  name = '';
-  key = '';
+  name = 'jwt.signing.user';
+  key = 'jwt.signing.key';
 
   constructor() { }
 
