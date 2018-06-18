@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-security',
-  templateUrl: './security.component.html',
-  styleUrls: ['./security.component.scss']
+  selector: 'app-main',
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss']
 })
-export class SecurityComponent implements OnInit {
+export class MainComponent implements OnInit {
   enabled = false;
   name = 'jwt.signing.user';
   key = 'jwt.signing.key';
