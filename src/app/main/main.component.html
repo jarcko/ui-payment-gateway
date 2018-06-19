@@ -1,6 +1,5 @@
-<div class="security-section">
+<div class="separate-section">
   <div class="section-name">Security</div>
-  <!--<mat-checkbox (change)="checkboxTogle($event)">enable JWT main</mat-checkbox>-->
   <mat-checkbox [(ngModel)]="enabled">enable JWT security</mat-checkbox>
   <div class="inputs" *ngIf="enabled">
     <mat-form-field>
@@ -10,6 +9,36 @@
       <input matInput type="text" placeholder="Key" [ngModel]="key">
     </mat-form-field>
   </div>
+</div>
+
+<div class="separate-section">
+  <div class="section-name">Payment Flow</div>
+  <div class="inputs wide">
+    <mat-form-field>
+      <input matInput type="text" placeholder="Order ID" [ngModel]="orderId">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" placeholder="Success URL" [ngModel]="defaultUrl">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" placeholder="Failure URL" [ngModel]="defaultUrl">
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button class="mat-accent" (click)="onGetProvidersClick()">Get Payment Providers</button>
+
+  <mat-radio-group class="providers-list" *ngIf="paymentProviders.length" [(ngModel)]="selectedProviderName">
+    <mat-radio-button *ngFor="let provider of paymentProviders" [value]="provider.name">{{provider.name}}</mat-radio-button>
+  </mat-radio-group>
+
+  <button mat-raised-button class="mat-accent">Get Provider Config</button>
+
+  <button mat-raised-button class="mat-accent" (click)="onPost()">Post data</button>
+
+  <iframe src="" frameborder="0"></iframe>
+
+
+
 </div>
 
 

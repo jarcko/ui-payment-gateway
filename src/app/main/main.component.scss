@@ -1,7 +1,10 @@
-.security-section {
+.separate-section {
+  display: flex;
+  flex-direction: column;
   padding: 10px;
   border: 1px solid #d3d3d3;
   background-color: #f7f7f7;
+  margin-bottom: 5px;
 
   .inputs {
     padding-top: 10px;
@@ -9,10 +12,34 @@
       width: 30%;
       margin-right: 20px;
     }
+
+    &.wide {
+      display: flex;
+      flex-direction: column;
+
+      mat-form-field {
+        width: 90%;
+      }
+    }
   }
   .section-name {
     font-size: 18px;
     font-weight: bold;
     padding-bottom: 14px;
+  }
+
+  .providers-list {
+    display: flex;
+    flex-direction: column;
+
+    mat-radio-button {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+  }
+
+  .mat-accent {
+    width: 20%;
+    margin-top: 10px;
   }
 }
