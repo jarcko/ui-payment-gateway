@@ -13,10 +13,8 @@ export class MainComponent implements OnInit {
   key = 'jwt.signing.key';
   orderId = 'test-page-' + new Date().toJSON().slice(0, 19);
   defaultUrl = 'http://localhost:4200';
-  paymentProviders: Array<{name: string, info: string}>;
+  paymentProviders: string[];
   selectedProviderName: string;
-
-  providers = [{name: 'Ogone', info: 'some info about Ogone'}, {name: 'Ingenico', info: 'some info about Ingenico'}];
 
   constructor(private communication: CommunicationService) {
   }
@@ -30,38 +28,21 @@ export class MainComponent implements OnInit {
   //   console.log(this.selectedProviderName);
   // }
 
-  onPost() {
-    this.communication.post('', this.providers)
+  onGetProvidersClick() {
+    this.communication.get('/api/paymentProviders')
       .subscribe(
-        (response) => console.log(response),
+        (data: {apiClient: string, enabledPaymentProviders: string[]}) => {
+          this._savePaymentProviders(data.enabledPaymentProviders);
+        },
         (error) => console.log(error)
       );
-  }
-
-  onGetProvidersClick() {
-    // this.communication.get('/api/paymentProviders')
-    this.communication.get('')
-      .subscribe(
-        (data: any[]) => {
-          const key = Object.keys(data)[0];
-          this._savePaymentProviders(data[key]);
-          // console.log(data[key]);
-
-        },
-        (error) => console.log(error),
-        () => console.log('completed')
-      );
-
-    // }
 
   }
 
-  private _savePaymentProviders(providers: {name: string, info: string}[]): void {
-    providers.forEach((el) => {
-      const filtered = this.paymentProviders.filter((existingEl: {name: string, info: string}) => {
-        return existingEl.name === el.name;
-      });
-      if (filtered.length === 0) {
+  private _savePaymentProviders(providers: string[]): void {
+    providers.forEach((el: string) => {
+      const isAlreadyAdded = this.paymentProviders.indexOf(el) !== -1;
+      if (!isAlreadyAdded) {
         this.paymentProviders.push(el);
       }
     });

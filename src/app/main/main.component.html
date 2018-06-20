@@ -28,15 +28,14 @@
   <button mat-raised-button class="mat-accent" (click)="onGetProvidersClick()">Get Payment Providers</button>
 
   <mat-radio-group class="providers-list" *ngIf="paymentProviders.length" [(ngModel)]="selectedProviderName">
-    <mat-radio-button *ngFor="let provider of paymentProviders" [value]="provider.name">{{provider.name}}</mat-radio-button>
+    <mat-radio-button *ngFor="let provider of paymentProviders" [value]="provider">
+      {{provider.substr(0, 1) + (provider.substr(1)| lowercase)}}
+    </mat-radio-button>
   </mat-radio-group>
 
   <button mat-raised-button class="mat-accent">Get Provider Config</button>
 
-  <button mat-raised-button class="mat-accent" (click)="onPost()">Post data</button>
-
   <iframe src="" frameborder="0"></iframe>
-
 
 
 </div>
