@@ -6,15 +6,17 @@ import { MainComponent } from './main/main.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatRadioModule } from '@angular/material';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { CommunicationService } from './main/communication.service';
 import { HttpModule } from '@angular/http';
+import { NotificationComponent } from './main/notification/notification.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
+    NotificationComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,9 +27,12 @@ import { HttpModule } from '@angular/http';
     FormsModule,
     MatButtonModule,
     MatRadioModule,
-    HttpModule
+    HttpModule,
+    ReactiveFormsModule
   ],
-  providers: [CommunicationService],
+  providers: [
+    CommunicationService
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {

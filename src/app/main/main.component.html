@@ -1,46 +1,69 @@
-<div class="separate-section">
-  <div class="section-name">Security</div>
-  <mat-checkbox [(ngModel)]="enabled">enable JWT security</mat-checkbox>
-  <div class="inputs" *ngIf="enabled">
-    <mat-form-field>
-      <input matInput type="text" placeholder="User" [ngModel]="name">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="text" placeholder="Key" [ngModel]="key">
-    </mat-form-field>
+<app-notification
+  *ngIf="notification"
+  [type]="notification.notificationType"
+  [header]="notification.header"
+  [text]="notification.text">
+</app-notification>
+
+<div class="section-wrapper first">
+  <div class="section first">
+    <div class="section-name first">Security</div>
+    <mat-checkbox [(ngModel)]="jwtEnabled">enable JWT security</mat-checkbox>
+    <div class="inputs wide" *ngIf="jwtEnabled">
+      <!--<mat-form-field>-->
+      <!--<input matInput type="text" placeholder="User">-->
+      <!--</mat-form-field>-->
+      <mat-form-field>
+        <input matInput type="password" placeholder="Key" [(ngModel)]="key">
+      </mat-form-field>
+    </div>
   </div>
 </div>
 
-<div class="separate-section">
-  <div class="section-name">Payment Flow</div>
-  <div class="inputs wide">
-    <mat-form-field>
-      <input matInput type="text" placeholder="Order ID" [ngModel]="orderId">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="text" placeholder="Success URL" [ngModel]="defaultUrl">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="text" placeholder="Failure URL" [ngModel]="defaultUrl">
-    </mat-form-field>
+<div class="section-wrapper">
+  <div class="section last">
+    <div class="section-name last">Payment Flow</div>
+    <div class="step-container">
+      <div class="step-border">
+        <div class="step-title first">Step 1:</div>
+        <button mat-raised-button class="mat-accent" (click)="onGetProvidersClick()">Get Payment Providers</button>
+
+        <mat-radio-group class="providers-list" *ngIf="paymentProviders.length" [(ngModel)]="selectedProviderName">
+          <mat-radio-button *ngFor="let provider of paymentProviders" [value]="provider">
+            {{provider.substr(0, 1) + (provider.substr(1)| lowercase)}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <div class="step-container">
+      <div class="step-border">
+        <div class="step-title last">Step 2:</div>
+
+        <form [formGroup]="providerConfigFrom" (ngSubmit)="providerConfigFrom.valid && getConfig()">
+          <div class="inputs wide">
+            <mat-form-field>
+              <input matInput type="text" placeholder="Order ID" formControlName="orderId">
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput type="text" placeholder="Success URL" formControlName="successUrl">
+              <mat-error>Enter valid URL address</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput type="text" placeholder="Failure URL" formControlName="failureUrl">
+              <mat-error>Enter valid URL address</mat-error>
+            </mat-form-field>
+          </div>
+
+          <button mat-raised-button class="mat-accent" type="submit">Get Provider Config</button>
+        </form>
+      </div>
+    </div>
+
+    <iframe src="" frameborder="0"></iframe>
+
   </div>
-
-  <button mat-raised-button class="mat-accent" (click)="onGetProvidersClick()">Get Payment Providers</button>
-
-  <mat-radio-group class="providers-list" *ngIf="paymentProviders.length" [(ngModel)]="selectedProviderName">
-    <mat-radio-button *ngFor="let provider of paymentProviders" [value]="provider">
-      {{provider.substr(0, 1) + (provider.substr(1)| lowercase)}}
-    </mat-radio-button>
-  </mat-radio-group>
-
-  <button mat-raised-button class="mat-accent">Get Provider Config</button>
-
-  <iframe src="" frameborder="0"></iframe>
-
-
 </div>
-
-
 
 
 

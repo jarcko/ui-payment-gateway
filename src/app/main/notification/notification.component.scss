@@ -1,0 +1,33 @@
+.notification {
+  border: 1px solid;
+  margin-bottom: 10px;
+
+  &.error {
+    border-color: rgb(244, 67, 54);
+    .header {
+      border-color: rgb(244, 67, 54);
+      background-color: rgb(244, 67, 54);
+    }
+  }
+
+  &.success {
+    border-color: green;
+    .header {
+      border-color: green;
+      background-color: green;
+    }
+  }
+
+  .header {
+    font-size: 20px;
+    color: white;
+    border: 1px solid;
+    padding: 5px;
+  }
+
+  .text {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+

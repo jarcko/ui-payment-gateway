@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit } from '@angular/core';
 import { CommunicationService } from './communication.service';
+import { Notification } from './main.interfaces';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-main',
@@ -8,20 +10,30 @@ import { CommunicationService } from './communication.service';
 })
 
 export class MainComponent implements OnInit {
-  enabled = false;
-  name = 'jwt.signing.user';
-  key = 'jwt.signing.key';
+  jwtEnabled = false;
+  key = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29raW5ncyByZXF1ZXN0In0.' +
+    'OqtiU5v7iDO47tq8oeWu6rBaf0R25YDR1m9ouwsZV-ApHYQhD5FdZ8xqJ6dlibbUoM98_4MDO3feVcdytOnm7Q';
+
   orderId = 'test-page-' + new Date().toJSON().slice(0, 19);
   defaultUrl = 'http://localhost:4200';
   paymentProviders: string[];
   selectedProviderName: string;
+  notification: Notification;
 
-  constructor(private communication: CommunicationService) {
+  providerConfigFrom: FormGroup;
+
+  constructor(private communication: CommunicationService,
+              private fb: FormBuilder) {
   }
 
 
   ngOnInit() {
     this.paymentProviders = this.paymentProviders || [];
+    this.providerConfigFrom = this.fb.group({
+      orderId: [this.orderId],
+      successUrl: [this.defaultUrl, Validators.pattern('^http.*')],
+      failureUrl: [this.defaultUrl, Validators.pattern('^http.*')],
+    });
   }
 
   // ngDoCheck() {
@@ -29,14 +41,28 @@ export class MainComponent implements OnInit {
   // }
 
   onGetProvidersClick() {
-    this.communication.get('/api/paymentProviders')
+    this._resetNotification();
+    const key = this.jwtEnabled ? this.key : null;
+    this.communication.get('/api/paymentProviders/', null, key)
       .subscribe(
         (data: {apiClient: string, enabledPaymentProviders: string[]}) => {
           this._savePaymentProviders(data.enabledPaymentProviders);
         },
-        (error) => console.log(error)
+        (err) => {
+          const errData = err.json();
+          this.notification = {
+            notificationType: 'error',
+            header: `${errData.error}`,
+            text: `${errData.status}: ${errData.error}. ${errData.message}`
+          };
+        }
       );
+  }
 
+  getConfig() {
+    this._resetNotification();
+    console.log(this.providerConfigFrom.getRawValue());
+    this.communication.get(`paymentProviders/${this.selectedProviderName}/config/`);
   }
 
   private _savePaymentProviders(providers: string[]): void {
@@ -47,5 +73,9 @@ export class MainComponent implements OnInit {
       }
     });
     console.log(this.paymentProviders);
+  }
+
+  private _resetNotification() {
+    this.notification = null;
   }
 }
