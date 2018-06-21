@@ -11,3 +11,14 @@ export interface Providers {
   apiClient: string;
   enabledPaymentProviders: string[];
 }
+
+export interface ProviderConfig {
+  formParams: FormParameter[];
+  paymentProvider: string;
+  iframeUrl: string;
+}
+
+interface FormParameter {
+  key: string;
+  value: string;
+}

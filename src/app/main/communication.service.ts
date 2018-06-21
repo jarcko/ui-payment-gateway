@@ -11,7 +11,6 @@ export class CommunicationService {
   }
 
   get(path: string, opts: Object, key?: string) {
-
     const headers = key ? new HttpHeaders().set('Authorization', key) : null;
     let params = opts ? new HttpParams() : null;
     if (params) {

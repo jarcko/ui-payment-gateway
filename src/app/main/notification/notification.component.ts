@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Notification } from '../main.interfaces';
 import { NotificationService } from './notification.service';
 
@@ -7,7 +7,7 @@ import { NotificationService } from './notification.service';
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss']
 })
-export class NotificationComponent implements OnInit {
+export class NotificationComponent implements OnInit, OnDestroy {
   notification: Notification;
 
   constructor(private notificationService: NotificationService) {
@@ -19,6 +19,10 @@ export class NotificationComponent implements OnInit {
         this.notification = data;
       }
     );
+  }
+
+  ngOnDestroy() {
+    this.notificationService.notificationSubject.unsubscribe();
   }
 
 }

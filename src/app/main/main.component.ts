@@ -1,6 +1,6 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommunicationService } from './communication.service';
-import { Notification, Providers } from './main.interfaces';
+import { ProviderConfig, Providers } from './main.interfaces';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from './notification/notification.service';
 import { MatSnackBar } from '@angular/material';
@@ -18,11 +18,11 @@ export class MainComponent implements OnInit {
     'OqtiU5v7iDO47tq8oeWu6rBaf0R25YDR1m9ouwsZV-ApHYQhD5FdZ8xqJ6dlibbUoM98_4MDO3feVcdytOnm7Q';
 
   orderId = 'test-page-' + new Date().toJSON().slice(0, 19);
-  defaultUrl = 'http://localhost:4200';
   paymentProviders: string[];
   selectedProviderName: string;
 
   providerConfigFrom: FormGroup;
+  providerConfig: ProviderConfig;
 
   constructor(private communicationService: CommunicationService,
               private notificationService: NotificationService,
@@ -35,8 +35,8 @@ export class MainComponent implements OnInit {
     this.paymentProviders = this.paymentProviders || [];
     this.providerConfigFrom = this.fb.group({
       orderId: [this.orderId],
-      successUrl: [this.defaultUrl, Validators.pattern('^http.*')],
-      failureUrl: [this.defaultUrl, Validators.pattern('^http.*')]
+      acceptUrl: ['http://localhost:4200', Validators.pattern('^http.*')],
+      exceptionUrl: ['http://localhost:4200', Validators.pattern('^http.*')]
     });
   }
 
@@ -56,9 +56,12 @@ export class MainComponent implements OnInit {
     }
     const options = this.providerConfigFrom.getRawValue();
     this.communicationService.get(
-      `paymentProviders/${this.selectedProviderName}/config/`, options, this.jwtEnabled ? this.key : null)
+      `/api/paymentProviders/${this.selectedProviderName}/config/`, options, this.jwtEnabled ? this.key : null)
       .subscribe(
-        (data) => console.log(data),
+        (data: ProviderConfig) => {
+          this.providerConfig = data;
+          console.log(this.providerConfig);
+        },
         (err) => this.notificationService.pushNotification(err.error)
       );
   }
