@@ -1,6 +1,6 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
 import { CommunicationService } from './communication.service';
-import { Notification } from './main.interfaces';
+import { Notification, Providers } from './main.interfaces';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -32,28 +32,22 @@ export class MainComponent implements OnInit {
     this.providerConfigFrom = this.fb.group({
       orderId: [this.orderId],
       successUrl: [this.defaultUrl, Validators.pattern('^http.*')],
-      failureUrl: [this.defaultUrl, Validators.pattern('^http.*')],
+      failureUrl: [this.defaultUrl, Validators.pattern('^http.*')]
     });
   }
 
-  // ngDoCheck() {
-  //   console.log(this.selectedProviderName);
-  // }
-
   onGetProvidersClick() {
     this._resetNotification();
-    const key = this.jwtEnabled ? this.key : null;
-    this.communication.get('/api/paymentProviders/', null, key)
+    this.communication.get('/api/paymentProviders/', null, this.jwtEnabled ? this.key : null)
       .subscribe(
-        (data: {apiClient: string, enabledPaymentProviders: string[]}) => {
+        (data: Providers) => {
           this._savePaymentProviders(data.enabledPaymentProviders);
         },
         (err) => {
-          const errData = err.json();
           this.notification = {
             notificationType: 'error',
-            header: `${errData.error}`,
-            text: `${errData.status}: ${errData.error}. ${errData.message}`
+            header: `${err.error}`,
+            text: `${err.status}: ${err.error}. ${err.message}`
           };
         }
       );
@@ -62,7 +56,14 @@ export class MainComponent implements OnInit {
   getConfig() {
     this._resetNotification();
     console.log(this.providerConfigFrom.getRawValue());
-    this.communication.get(`paymentProviders/${this.selectedProviderName}/config/`);
+    this.communication.get(
+      `paymentProviders/${this.selectedProviderName}/config/`,
+      this.providerConfigFrom.getRawValue(),
+      this.jwtEnabled ? this.key : null)
+      .subscribe(
+        (data) => console.log(data),
+        (err) => console.log(err)
+      );
   }
 
   private _savePaymentProviders(providers: string[]): void {

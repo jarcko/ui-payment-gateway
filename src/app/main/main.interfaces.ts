@@ -8,3 +8,8 @@ export interface Notification {
   header: string;
   text: string;
 }
+
+export interface Providers {
+  apiClient: string;
+  enabledPaymentProviders: string[];
+}

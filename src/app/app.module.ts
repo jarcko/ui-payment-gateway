@@ -8,7 +8,7 @@ import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatRadioModule 
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { CommunicationService } from './main/communication.service';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NotificationComponent } from './main/notification/notification.component';
 
 
@@ -27,7 +27,7 @@ import { NotificationComponent } from './main/notification/notification.componen
     FormsModule,
     MatButtonModule,
     MatRadioModule,
-    HttpModule,
+    HttpClientModule,
     ReactiveFormsModule
   ],
   providers: [
