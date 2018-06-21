@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NotificationComponent } from './main/notification/notification.component';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { IngenicoIframeComponent } from './main/ingenico-iframe/ingenico-iframe.component';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     AppComponent,
     MainComponent,
     NotificationComponent,
+    IngenicoIframeComponent,
   ],
   imports: [
     BrowserModule,

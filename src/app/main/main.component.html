@@ -18,6 +18,7 @@
 <div class="section-wrapper">
   <div class="section last">
     <div class="section-name last">Payment Flow</div>
+
     <div class="step-container">
       <div class="step-border">
         <div class="step-title first">Step 1:</div>
@@ -33,7 +34,7 @@
 
     <div class="step-container">
       <div class="step-border">
-        <div class="step-title last">Step 2:</div>
+        <div class="step-title">Step 2:</div>
 
         <form [formGroup]="providerConfigFrom" (ngSubmit)="providerConfigFrom.valid && getConfig()">
           <div class="inputs wide">
@@ -55,7 +56,16 @@
       </div>
     </div>
 
-    <iframe src="" frameborder="0"></iframe>
+    <div class="step-container">
+      <div class="step-border">
+        <div class="step-title last">Step 3:</div>
+        <button mat-raised-button class="mat-accent" *ngIf="providerConfig" (click)="onGetProvidersClick()">iFrame</button>
+
+        <!--<iframe src="" frameborder="0"></iframe>-->
+      </div>
+    </div>
+
+
 
   </div>
 </div>
