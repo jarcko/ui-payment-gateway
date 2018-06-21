@@ -11,6 +11,8 @@ import { CommunicationService } from './main/communication.service';
 import { NotificationService } from './main/notification/notification.service';
 import { HttpClientModule } from '@angular/common/http';
 import { NotificationComponent } from './main/notification/notification.component';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -29,11 +31,13 @@ import { NotificationComponent } from './main/notification/notification.componen
     MatButtonModule,
     MatRadioModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSnackBarModule
   ],
   providers: [
     CommunicationService,
-    NotificationService
+    NotificationService,
+    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500}}
   ],
   bootstrap: [AppComponent],
 })

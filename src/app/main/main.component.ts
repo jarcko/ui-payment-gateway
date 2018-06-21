@@ -3,6 +3,8 @@ import { CommunicationService } from './communication.service';
 import { Notification, Providers } from './main.interfaces';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from './notification/notification.service';
+import { MatSnackBar } from '@angular/material';
+
 
 @Component({
   selector: 'app-main',
@@ -24,7 +26,8 @@ export class MainComponent implements OnInit {
 
   constructor(private communicationService: CommunicationService,
               private notificationService: NotificationService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              public snackbar: MatSnackBar) {
   }
 
 
@@ -48,8 +51,8 @@ export class MainComponent implements OnInit {
 
   getConfig() {
     this.notificationService.resetNotification();
-    if(!this.selectedProviderName){
-      alert('Select provider');
+    if (!this.selectedProviderName) {
+      this.snackbar.open('Please select Payment Provider', 'Something missed');
     }
     const options = this.providerConfigFrom.getRawValue();
     this.communicationService.get(
@@ -67,7 +70,6 @@ export class MainComponent implements OnInit {
         this.paymentProviders.push(el);
       }
     });
-    console.log(this.paymentProviders);
   }
 
 }
