@@ -1,12 +1,10 @@
-export enum NotificationType {
-  Warn = 'error',
-  Success = 'success'
-}
-
 export interface Notification {
-  notificationType: string;
-  header: string;
-  text: string;
+  timestamp: number;
+  status: number;
+  error: string;
+  exception: string;
+  message: string;
+  path: string;
 }
 
 export interface Providers {

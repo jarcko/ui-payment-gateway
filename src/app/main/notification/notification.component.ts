@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NotificationType } from '../main.interfaces';
+import { Notification } from '../main.interfaces';
+import { NotificationService } from './notification.service';
 
 @Component({
   selector: 'app-notification',
@@ -7,14 +8,17 @@ import { NotificationType } from '../main.interfaces';
   styleUrls: ['./notification.component.scss']
 })
 export class NotificationComponent implements OnInit {
-  @Input() type: NotificationType;
-  @Input() header: string;
-  @Input() text: string;
+  notification: Notification;
 
-
-  constructor() { }
+  constructor(private notificationService: NotificationService) {
+  }
 
   ngOnInit() {
+    this.notificationService.notificationSubject.subscribe(
+      (data: Notification) => {
+        this.notification = data;
+      }
+    );
   }
 
 }

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/internal/operators';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Providers } from './main.interfaces';
-import { HttpParamsOptions } from '@angular/common/http/src/params';
 
 @Injectable()
 export class CommunicationService {
@@ -12,26 +10,22 @@ export class CommunicationService {
   constructor(private httpClient: HttpClient) {
   }
 
-  get(path: string, opts?: Object, key?: string) {
+  get(path: string, opts: Object, key?: string) {
 
     const headers = key ? new HttpHeaders().set('Authorization', key) : null;
     let params = opts ? new HttpParams() : null;
-
-    // if (params) {
-    //   Object.keys(opts).forEach((propertyName: string) => {
-    //     params = params.append(propertyName, opts[key]);
-    //   });
-    // }
     if (params) {
-      params = params.set('orderId', opts.orderId).append('successUrl', opts.successUrl).append('failureUrl', opts.failureUrl);
+      Object.keys(opts).forEach((prop: string) => {
+        params = params.append(prop, opts[prop]);
+      });
     }
 
-    return this.httpClient.get<Providers>(this.basePath + path, {
+    return this.httpClient.get(this.basePath + path, {
       headers: headers,
       params: params
     })
       .pipe(
-        map((providers) => providers)
+        map((data) => data)
       );
   }
 

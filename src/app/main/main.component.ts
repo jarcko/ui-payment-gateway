@@ -2,6 +2,7 @@ import { Component, OnChanges, OnInit } from '@angular/core';
 import { CommunicationService } from './communication.service';
 import { Notification, Providers } from './main.interfaces';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NotificationService } from './notification/notification.service';
 
 @Component({
   selector: 'app-main',
@@ -18,11 +19,11 @@ export class MainComponent implements OnInit {
   defaultUrl = 'http://localhost:4200';
   paymentProviders: string[];
   selectedProviderName: string;
-  notification: Notification;
 
   providerConfigFrom: FormGroup;
 
-  constructor(private communication: CommunicationService,
+  constructor(private communicationService: CommunicationService,
+              private notificationService: NotificationService,
               private fb: FormBuilder) {
   }
 
@@ -37,32 +38,25 @@ export class MainComponent implements OnInit {
   }
 
   onGetProvidersClick() {
-    this._resetNotification();
-    this.communication.get('/api/paymentProviders/', null, this.jwtEnabled ? this.key : null)
+    this.notificationService.resetNotification();
+    this.communicationService.get('/api/paymentProviders/', null, this.jwtEnabled ? this.key : null)
       .subscribe(
-        (data: Providers) => {
-          this._savePaymentProviders(data.enabledPaymentProviders);
-        },
-        (err) => {
-          this.notification = {
-            notificationType: 'error',
-            header: `${err.error}`,
-            text: `${err.status}: ${err.error}. ${err.message}`
-          };
-        }
+        (data: Providers) => this._savePaymentProviders(data.enabledPaymentProviders),
+        (err) => this.notificationService.pushNotification(err.error)
       );
   }
 
   getConfig() {
-    this._resetNotification();
-    console.log(this.providerConfigFrom.getRawValue());
-    this.communication.get(
-      `paymentProviders/${this.selectedProviderName}/config/`,
-      this.providerConfigFrom.getRawValue(),
-      this.jwtEnabled ? this.key : null)
+    this.notificationService.resetNotification();
+    if(!this.selectedProviderName){
+      alert('Select provider');
+    }
+    const options = this.providerConfigFrom.getRawValue();
+    this.communicationService.get(
+      `paymentProviders/${this.selectedProviderName}/config/`, options, this.jwtEnabled ? this.key : null)
       .subscribe(
         (data) => console.log(data),
-        (err) => console.log(err)
+        (err) => this.notificationService.pushNotification(err.error)
       );
   }
 
@@ -76,7 +70,4 @@ export class MainComponent implements OnInit {
     console.log(this.paymentProviders);
   }
 
-  private _resetNotification() {
-    this.notification = null;
-  }
 }

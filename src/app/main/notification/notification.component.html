@@ -1,5 +1,8 @@
-<div class="notification {{type}}">
-  <div class="header">{{header}}</div>
-  <p class="text">{{text}}</p>
+<div class="notification"
+  *ngIf="notification && notification.error"
+  [ngClass]="{'error': notification.error, 'success': !notification.error }">
+
+  <div class="header">{{notification.error}}</div>
+  <p class="text">{{notification.status + ': ' + notification.message}}</p>
 </div>
 

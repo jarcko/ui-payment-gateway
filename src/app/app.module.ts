@@ -8,6 +8,7 @@ import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatRadioModule 
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { CommunicationService } from './main/communication.service';
+import { NotificationService } from './main/notification/notification.service';
 import { HttpClientModule } from '@angular/common/http';
 import { NotificationComponent } from './main/notification/notification.component';
 
@@ -31,9 +32,11 @@ import { NotificationComponent } from './main/notification/notification.componen
     ReactiveFormsModule
   ],
   providers: [
-    CommunicationService
+    CommunicationService,
+    NotificationService
   ],
   bootstrap: [AppComponent],
 })
+
 export class AppModule {
 }
