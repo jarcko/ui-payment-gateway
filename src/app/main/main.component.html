@@ -58,10 +58,28 @@
 
     <div class="step-container">
       <div class="step-border">
-        <div class="step-title last">Step 3:</div>
-        <button mat-raised-button class="mat-accent" *ngIf="providerConfig" (click)="onGetProvidersClick()">iFrame</button>
+        <div class="step-title">Step 3:</div>
 
-        <!--<iframe src="" frameborder="0"></iframe>-->
+        <app-ingenico-iframe
+          *ngIf="providerConfig"
+          [providerUrl] = "'http://ogone.test.v-psp.com/Tokenization/HostedPage'"
+          [params]="providerConfig.formParams">
+        </app-ingenico-iframe>
+
+      </div>
+    </div>
+
+    <div class="step-container">
+      <div class="step-border">
+        <div class="step-title">Step 4:</div>
+
+      </div>
+    </div>
+
+    <div class="step-container">
+      <div class="step-border">
+        <div class="step-title last">Step 5:</div>
+
       </div>
     </div>
 

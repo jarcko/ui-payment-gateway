@@ -18,7 +18,7 @@ export interface ProviderConfig {
   iframeUrl: string;
 }
 
-interface FormParameter {
+export interface FormParameter {
   key: string;
   value: string;
 }

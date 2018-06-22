@@ -12,7 +12,7 @@
     padding: 12px 7% 12px 7%;
     border: 1px solid #d3d3d3;
     box-shadow: 0 1px 2px #CCC;
-    background-color: #f7f7f7;
+    background: #f7f7f7;
 
     .section-name {
       font-size: 18px;
@@ -20,23 +20,14 @@
       padding-bottom: 14px;
 
       &:before {
-        content: "";
+        content: url("../icons/knob.png");
         position: absolute;
-        background-color: #85c800;
         width: 18px;
         height: 18px;
-        border-radius: 50%;
-        left: calc(7% / 4);
-        margin-top: 4px;
+        //border-radius: 50%;
+        left: calc(7% / 3);
+        margin-top: -5px;
 
-      }
-      &:after {
-        content: "";
-        display: block;
-        position: absolute;
-        width: 3px;
-        background: #85c800;
-        left: calc(7% / 4 + 7px);
       }
 
       &.first:after {
@@ -46,7 +37,7 @@
 
       &.last:after {
         top: 0;
-        bottom: 96%;
+        bottom: calc(100% - 25px);
       }
     }
 
@@ -54,23 +45,26 @@
       position: relative;
 
       .step-border {
-        border: 1px dashed #c1bfbf;
+        border: 1px solid #c1bfbf;
+
         padding: 10px 20px 20px 20px;
         margin-bottom: 10px;
+        background: #fff;
+        box-shadow: 0 1px 2px #c1bfbf;
       }
 
       .step-title {
-        opacity: 0.7;
+        color: #5e5e5e;
         padding-bottom: 10px;
 
         &:before {
           content: "";
           position: absolute;
-          background-color: #ccc;
+          background-color: #C0C0C0;
           width: 15px;
           height: 15px;
           border-radius: 50%;
-          left: calc(-7% / 2);
+          left: calc(-8% / 3);
           top: 12px;
         }
 
@@ -79,10 +73,10 @@
           display: block;
           position: absolute;
           width: 3px;
-          background: #ccc;
+          background: #C0C0C0;
           top: 0;
           bottom: 0;
-          left: calc(-7% / 2 + 6px);
+          left: calc(-8% / 3 + 6px);
         }
 
         &.first:after {
