@@ -2,7 +2,7 @@
   background-color: #eeeeee;
   position: relative;
 
-  &.first{
+  &.first {
     padding-bottom: 7px;
   }
 
@@ -24,7 +24,6 @@
         position: absolute;
         width: 18px;
         height: 18px;
-        //border-radius: 50%;
         left: calc(7% / 3);
         margin-top: -5px;
 
@@ -86,6 +85,15 @@
         &.last:after {
           bottom: calc(100% - 20px)
         }
+
+      }
+
+      .text-reference {
+        font-style: italic;
+        font-size: 14px;
+        opacity: 0.6;
+        border: 1px dashed;
+        padding: 10px;
       }
     }
 
@@ -116,10 +124,19 @@
       }
     }
 
-    .mat-accent {
+    button.mat-accent,
+    mat-radio-button.mat-accent {
       width: 184px;
       margin-top: 10px;
     }
 
+  }
+
+  .spinner {
+    margin-top: 20px;
+  }
+
+  .spinner2 {
+    margin-top: 8px;
   }
 }

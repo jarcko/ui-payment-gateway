@@ -14,7 +14,16 @@ import { NotificationComponent } from './main/notification/notification.componen
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { IngenicoIframeComponent } from './main/ingenico-iframe/ingenico-iframe.component';
+import { RouterModule, Routes } from '@angular/router';
+import { ValidateCardComponent } from './validate-card/validate-card.component';
+import { CardConfirmedComponent } from './main/card-confirmed/card-confirmed.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+const appRoutes: Routes = [
+  {path: '', component: MainComponent},
+  {path: 'validate-card', component: ValidateCardComponent},
+  {path: '**', redirectTo: '', pathMatch: 'full'}
+];
 
 @NgModule({
   declarations: [
@@ -22,8 +31,11 @@ import { IngenicoIframeComponent } from './main/ingenico-iframe/ingenico-iframe.
     MainComponent,
     NotificationComponent,
     IngenicoIframeComponent,
+    ValidateCardComponent,
+    CardConfirmedComponent
   ],
   imports: [
+    RouterModule.forRoot(appRoutes),
     BrowserModule,
     BrowserAnimationsModule,
     MatCheckboxModule,
@@ -34,7 +46,8 @@ import { IngenicoIframeComponent } from './main/ingenico-iframe/ingenico-iframe.
     MatRadioModule,
     HttpClientModule,
     ReactiveFormsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     CommunicationService,

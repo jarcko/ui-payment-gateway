@@ -4,8 +4,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable()
 export class CommunicationService {
-  basePath = 'http://payment-gateway-1-qa.thomascook.io:8080';
-  testPath = 'https://awesome-backend-1.firebaseio.com/data.json';
 
   constructor(private httpClient: HttpClient) {
   }
@@ -19,7 +17,7 @@ export class CommunicationService {
       });
     }
 
-    return this.httpClient.get(this.basePath + path, {
+    return this.httpClient.get(path, {
       headers: headers,
       params: params
     })
@@ -29,6 +27,6 @@ export class CommunicationService {
   }
 
   post(path: string, body: any[]) {
-    return this.httpClient.post(this.basePath + path, body);
+    return this.httpClient.post(path, body);
   }
 }

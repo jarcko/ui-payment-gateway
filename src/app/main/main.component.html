@@ -22,7 +22,17 @@
     <div class="step-container">
       <div class="step-border">
         <div class="step-title first">Step 1:</div>
+
+        <div class="inputs wide" *ngIf="isDevMode">
+          <mat-form-field>
+            <input matInput type="url" placeholder="Gateway URL" [(ngModel)]="gatewayUrl">
+          </mat-form-field>
+        </div>
+
         <button mat-raised-button class="mat-accent" (click)="onGetProvidersClick()">Get Payment Providers</button>
+
+        <mat-progress-spinner *ngIf="spinner1" class="spinner" mode="indeterminate" [color]="'accent'" [diameter]="50">
+        </mat-progress-spinner>
 
         <mat-radio-group class="providers-list" *ngIf="paymentProviders.length" [(ngModel)]="selectedProviderName">
           <mat-radio-button *ngFor="let provider of paymentProviders" [value]="provider">
@@ -60,11 +70,20 @@
       <div class="step-border">
         <div class="step-title">Step 3:</div>
 
+        <!--<div class="text-reference" *ngIf="!spinner2 || !providerConfig">Iframe will be populated here</div>-->
+
+        <mat-progress-spinner *ngIf="spinner2" class="spinner2" mode="indeterminate" [color]="'accent'" [diameter]="50">
+        </mat-progress-spinner>
+
         <app-ingenico-iframe
           *ngIf="providerConfig"
-          [providerUrl] = "'http://ogone.test.v-psp.com/Tokenization/HostedPage'"
-          [params]="providerConfig.formParams">
+          [providerUrl]="providerConfig.iframeUrl"
+          [params]="providerConfig.formParams"
+          [hideIframe]="providerValidationDetails.responseType"
+          (updateSpinner)="setSpinner(2, false)">
         </app-ingenico-iframe>
+
+        <app-card-confirmed *ngIf="isPaymentDetailsValid"></app-card-confirmed>
 
       </div>
     </div>
@@ -82,7 +101,6 @@
 
       </div>
     </div>
-
 
 
   </div>

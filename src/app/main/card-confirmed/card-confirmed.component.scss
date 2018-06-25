@@ -1,0 +1,46 @@
+.card-container {
+  background-color: white;
+  margin-bottom: 8px;
+  width: 46%;
+
+  .message {
+    font-size: 20px;
+    font-weight: bold;
+    color: green;
+    margin-bottom: 10px;
+  }
+
+  .card-details-text {
+
+  }
+
+  label {
+    color: #5e5e5e;
+    font-size: 14px;
+  }
+
+  .card-details {
+    display: flex;
+    flex-direction: column;
+    padding-top: 5px;
+    padding-bottom: 10px;
+
+    .detail {
+      display: flex;
+      justify-content: space-between;
+
+      div {
+        //width: 50%;
+        color: #5e5e5e;
+        font-size: 14px;
+      }
+
+    }
+
+  }
+
+  .mat-accent {
+    width: 184px;
+    margin-top: 10px;
+  }
+}

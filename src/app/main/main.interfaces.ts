@@ -22,3 +22,15 @@ export interface FormParameter {
   key: string;
   value: string;
 }
+
+export interface CardInfo {
+  brand: string;
+  number: string;
+  holderName: string;
+}
+
+export interface ProviderValidationDetails {
+  responseType: string;
+  key: string;
+  value: string;
+}
