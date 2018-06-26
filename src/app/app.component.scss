@@ -1,4 +1,4 @@
-.background {
+.root-container {
   padding: 10px;
 
 .logo-container {
@@ -18,12 +18,5 @@
     font-weight: normal;
     text-align: center;
     height: 24px;
-  }
-
-  app-main {
-    display: flex;
-    flex-direction: column;
-    width: 960px;
-    margin: auto;
   }
 }

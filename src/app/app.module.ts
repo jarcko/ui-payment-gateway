@@ -6,6 +6,7 @@ import { MainComponent } from './main/main.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatRadioModule } from '@angular/material';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { CommunicationService } from './main/communication.service';
 import { NotificationService } from './main/notification/notification.service';
@@ -18,6 +19,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ValidateCardComponent } from './validate-card/validate-card.component';
 import { CardConfirmedComponent } from './main/card-confirmed/card-confirmed.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ResponseBlockComponent } from './main/response-block/response-block.component';
 
 const appRoutes: Routes = [
   {path: '', component: MainComponent},
@@ -32,7 +34,8 @@ const appRoutes: Routes = [
     NotificationComponent,
     IngenicoIframeComponent,
     ValidateCardComponent,
-    CardConfirmedComponent
+    CardConfirmedComponent,
+    ResponseBlockComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -41,6 +44,7 @@ const appRoutes: Routes = [
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     FormsModule,
     MatButtonModule,
     MatRadioModule,

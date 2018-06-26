@@ -7,7 +7,6 @@ import { MatSnackBar } from '@angular/material';
 import { EventManager } from '@angular/platform-browser';
 
 
-
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -28,12 +27,13 @@ export class MainComponent implements OnInit {
 
   providerConfigFrom: FormGroup;
   providerConfig: ProviderConfig;
-  spinner1: boolean;
-  spinner2: boolean;
+  spinners: boolean[] = [];
 
   providerValidationDetails: ProviderValidationDetails;
 
-
+  selectState = 'orderId';
+  queryTxValue: string;
+  queryTxResponse: Object;
 
   constructor(private communicationService: CommunicationService,
               private notificationService: NotificationService,
@@ -56,31 +56,54 @@ export class MainComponent implements OnInit {
   onGetProvidersClick() {
     this._defineBaseUrl();
     this.notificationService.resetNotification();
-    this.spinner1 = true;
+    this.spinners[0] = true;
     this.communicationService.get(this.baseUrl + '/api/paymentProviders/', null, this.jwtEnabled ? this.key : null)
       .subscribe(
         (data: Providers) => this._savePaymentProviders(data.enabledPaymentProviders),
-        (err) => this.notificationService.pushNotification(err.error)
+        (err) => {
+          this.notificationService.pushNotification(err.error);
+          this.spinners[0] = false;
+
+        }
       );
   }
 
   getConfig() {
     this._defineBaseUrl();
     this.notificationService.resetNotification();
-    if (!this.selectedProviderName) {
-      this.snackbar.open('Please select Payment Provider', 'Something missed');
-    } else {
-      this.spinner2 = true;
+    if (this.selectedProviderName) {
+      this.spinners[1] = true;
       const options = this.providerConfigFrom.getRawValue();
       this.communicationService.get(
-        `/api/paymentProviders/${this.selectedProviderName}/config/`, options, this.jwtEnabled ? this.key : null)
+        `${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/config/`, options, this.jwtEnabled ? this.key : null
+      )
         .subscribe(
-          (data: ProviderConfig) => {
-            this.providerConfig = data;
-            console.log(this.providerConfig);
-          },
+          (data: ProviderConfig) => this.providerConfig = data,
+          (err) => {
+            this.notificationService.pushNotification(err.error);
+            this.spinners[1] = false;
+          }
+        );
+    } else {
+      this.snackbar.open('Please select Payment Provider', 'Something missed');
+    }
+  }
+
+  queryTx() {
+    this._defineBaseUrl();
+    this.notificationService.resetNotification();
+    if (this.queryTxValue) {
+      const options = {};
+      options[this.selectState] = this.queryTxValue;
+      this.communicationService.get(
+        `${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/tx/query`, options, this.jwtEnabled ? this.key : null
+      )
+        .subscribe(
+          (data: Object) => this.queryTxResponse = data,
           (err) => this.notificationService.pushNotification(err.error)
         );
+    } else {
+      this.snackbar.open('Please specify transaction ID', 'Something missed');
     }
   }
 
@@ -89,7 +112,7 @@ export class MainComponent implements OnInit {
   }
 
   private _savePaymentProviders(providers: string[]): void {
-    this.spinner1 = false;
+    this.spinners[0] = false;
     providers.forEach((el: string) => {
       const isAlreadyAdded = this.paymentProviders.indexOf(el) !== -1;
       if (!isAlreadyAdded) {
@@ -99,7 +122,7 @@ export class MainComponent implements OnInit {
   }
 
   private _listenPostMessage() {
-    return this.eventManager.addGlobalEventListener('window', 'message', (e: MessageEvent) => {
+      return this.eventManager.addGlobalEventListener('window', 'message', (e: MessageEvent) => {
       if (e.data.responseType === 'cardValidation') {
         this.providerValidationDetails = e.data;
       }
@@ -107,7 +130,11 @@ export class MainComponent implements OnInit {
   }
 
   setSpinner(spinnerNumber: number, value: boolean) {
-    this[`spinner${spinnerNumber}`] = value;
+    this.spinners[spinnerNumber - 1] = value;
+  }
+
+  removeSpinners() {
+    this
   }
 
 }

@@ -1,119 +1,185 @@
-<app-notification></app-notification>
+<div class="main-content">
 
-<div class="section-wrapper first">
-  <div class="section first">
-    <div class="section-name first">Security</div>
-    <mat-checkbox [(ngModel)]="jwtEnabled">enable JWT security</mat-checkbox>
-    <div class="inputs wide" *ngIf="jwtEnabled">
-      <!--<mat-form-field>-->
-      <!--<input matInput type="text" placeholder="User">-->
-      <!--</mat-form-field>-->
-      <mat-form-field>
-        <input matInput type="password" placeholder="Key" [(ngModel)]="key">
+  <app-notification></app-notification>
+
+  <div class="section-wrapper">
+    <div class="section first">
+      <div class="section-name first">Find your transaction</div>
+
+      <mat-form-field class="mat-select">
+        <mat-select placeholder="Search by:" [(value)]="selectState">
+          <mat-option value="orderId">Order ID</mat-option>
+          <mat-option value="payId">Pay ID</mat-option>
+        </mat-select>
       </mat-form-field>
-    </div>
-  </div>
-</div>
 
-<div class="section-wrapper">
-  <div class="section last">
-    <div class="section-name last">Payment Flow</div>
-
-    <div class="step-container">
-      <div class="step-border">
-        <div class="step-title first">Step 1:</div>
-
-        <div class="inputs wide" *ngIf="isDevMode">
+      <div class="query-section">
+        <div class="inputs">
           <mat-form-field>
-            <input matInput type="url" placeholder="Gateway URL" [(ngModel)]="gatewayUrl">
+            <input matInput type="text" placeholder="Enter value" (ngModel)="query.orderId">
           </mat-form-field>
         </div>
 
-        <button mat-raised-button class="mat-accent" (click)="onGetProvidersClick()">Get Payment Providers</button>
+        <button mat-raised-button class="mat-basic" (click)="queryTx()">Query</button>
+      </div>
 
-        <mat-progress-spinner *ngIf="spinner1" class="spinner" mode="indeterminate" [color]="'accent'" [diameter]="50">
-        </mat-progress-spinner>
+    </div>
+  </div>
 
-        <mat-radio-group class="providers-list" *ngIf="paymentProviders.length" [(ngModel)]="selectedProviderName">
-          <mat-radio-button *ngFor="let provider of paymentProviders" [value]="provider">
-            {{provider.substr(0, 1) + (provider.substr(1)| lowercase)}}
-          </mat-radio-button>
-        </mat-radio-group>
+  <div class="section-wrapper">
+    <div class="section first">
+      <div class="section-name first">Security</div>
+      <mat-checkbox [(ngModel)]="jwtEnabled">enable JWT security</mat-checkbox>
+      <div class="inputs wide" *ngIf="jwtEnabled">
+        <!--<mat-form-field>-->
+        <!--<input matInput type="text" placeholder="User">-->
+        <!--</mat-form-field>-->
+        <mat-form-field>
+          <input matInput type="password" placeholder="Key" [(ngModel)]="key">
+        </mat-form-field>
       </div>
     </div>
+  </div>
 
-    <div class="step-container">
-      <div class="step-border">
-        <div class="step-title">Step 2:</div>
+  <div class="section-wrapper last">
+    <div class="section">
+      <div class="section-name last">Payment Flow</div>
 
-        <form [formGroup]="providerConfigFrom" (ngSubmit)="providerConfigFrom.valid && getConfig()">
-          <div class="inputs wide">
+      <div class="step-container">
+        <div class="step-border">
+          <div class="step-title first">Step 1:</div>
+
+          <div class="inputs wide" *ngIf="isDevMode">
             <mat-form-field>
-              <input matInput type="text" placeholder="Order ID" formControlName="orderId">
-            </mat-form-field>
-            <mat-form-field>
-              <input matInput type="text" placeholder="Success URL" formControlName="acceptUrl">
-              <mat-error>Enter valid URL address</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-              <input matInput type="text" placeholder="Failure URL" formControlName="exceptionUrl">
-              <mat-error>Enter valid URL address</mat-error>
+              <input matInput type="url" placeholder="Gateway URL" [(ngModel)]="gatewayUrl">
             </mat-form-field>
           </div>
 
-          <button mat-raised-button class="mat-accent" type="submit">Get Provider Config</button>
-        </form>
+          <button mat-raised-button class="mat-accent" (click)="onGetProvidersClick()">Get Payment Providers</button>
+
+          <mat-progress-spinner *ngIf="spinners.length && spinners[0]" class="spinner" mode="indeterminate" [color]="'accent'"
+            [diameter]="50">
+          </mat-progress-spinner>
+
+          <mat-radio-group class="providers-list" *ngIf="paymentProviders.length" [(ngModel)]="selectedProviderName">
+            <mat-radio-button *ngFor="let provider of paymentProviders" [value]="provider">
+              {{provider.substr(0, 1) + (provider.substr(1)| lowercase)}}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
       </div>
-    </div>
 
-    <div class="step-container">
-      <div class="step-border">
-        <div class="step-title">Step 3:</div>
+      <div class="step-container">
+        <div class="step-border">
+          <div class="step-title">Step 2:</div>
 
-        <!--<div class="text-reference" *ngIf="!spinner2 || !providerConfig">Iframe will be populated here</div>-->
+          <form [formGroup]="providerConfigFrom" (ngSubmit)="providerConfigFrom.valid && getConfig()">
+            <div class="inputs wide">
+              <mat-form-field>
+                <input matInput type="text" placeholder="Order ID" formControlName="orderId">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" placeholder="Success URL" formControlName="acceptUrl">
+                <mat-error>Enter valid URL address</mat-error>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput type="text" placeholder="Failure URL" formControlName="exceptionUrl">
+                <mat-error>Enter valid URL address</mat-error>
+              </mat-form-field>
+            </div>
 
-        <mat-progress-spinner *ngIf="spinner2" class="spinner2" mode="indeterminate" [color]="'accent'" [diameter]="50">
-        </mat-progress-spinner>
-
-        <app-ingenico-iframe
-          *ngIf="providerConfig"
-          [providerUrl]="providerConfig.iframeUrl"
-          [params]="providerConfig.formParams"
-          [hideIframe]="providerValidationDetails.responseType"
-          (updateSpinner)="setSpinner(2, false)">
-        </app-ingenico-iframe>
-
-        <app-card-confirmed *ngIf="isPaymentDetailsValid"></app-card-confirmed>
-
+            <button mat-raised-button class="mat-accent" type="submit">Get Provider Config</button>
+          </form>
+        </div>
       </div>
-    </div>
 
-    <div class="step-container">
-      <div class="step-border">
-        <div class="step-title">Step 4:</div>
+      <div class="step-container">
+        <div class="step-border">
+          <div class="step-title">Step 3:</div>
 
+          <div class="text-reference" *ngIf="!spinner2 && !providerConfig">Iframe will be populated here</div>
+
+          <mat-progress-spinner *ngIf="spinners[1]" class="spinner1" mode="indeterminate" [color]="'accent'"
+            [diameter]="50">
+          </mat-progress-spinner>
+
+          <app-ingenico-iframe
+            *ngIf="providerConfig"
+            [providerUrl]="providerConfig.iframeUrl"
+            [params]="providerConfig.formParams"
+            [hideIframe]="providerValidationDetails && providerValidationDetails.responseType"
+            (updateSpinner)="setSpinner(1, false)">
+          </app-ingenico-iframe>
+
+          <app-card-confirmed
+            *ngIf="providerValidationDetails && providerValidationDetails.responseType"></app-card-confirmed>
+
+          <app-response-block
+            *ngIf="providerValidationDetails && providerValidationDetails.responseType"
+            [validationDetails]="providerValidationDetails">
+          </app-response-block>
+
+        </div>
       </div>
-    </div>
 
-    <div class="step-container">
-      <div class="step-border">
-        <div class="step-title last">Step 5:</div>
+      <div class="step-container">
+        <div class="step-border">
+          <div class="step-title">Step 4:</div>
 
+          <button mat-raised-button class="mat-accent">Send Card Details</button>
+
+          <app-response-block
+            *ngIf="false"
+            [validationDetails]="null">
+          </app-response-block>
+
+        </div>
       </div>
+
+      <div class="step-container">
+        <div class="step-border">
+          <div class="step-title">Step 5:</div>
+
+          <button mat-raised-button class="mat-accent">Authorize</button>
+
+          <app-response-block
+            *ngIf="false"
+            [validationDetails]="null">
+          </app-response-block>
+
+        </div>
+      </div>
+
+      <div class="step-container">
+        <div class="step-border">
+          <div class="step-title">Step 6:</div>
+
+          <button mat-raised-button class="mat-accent">Capture</button>
+
+          <app-response-block
+            *ngIf="false"
+            [validationDetails]="null">
+          </app-response-block>
+
+        </div>
+      </div>
+
+      <div class="step-container">
+        <div class="step-border">
+          <div class="step-title last">Step 7:</div>
+
+          <button mat-raised-button class="mat-accent">Cancel Authorization</button>
+
+          <app-response-block
+            *ngIf="false"
+            [validationDetails]="null">
+          </app-response-block>
+
+        </div>
+      </div>
+
+
     </div>
-
-
   </div>
+
 </div>
-
-
-
-
-
-
-
-
-
-
-
-

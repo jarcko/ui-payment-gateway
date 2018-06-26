@@ -1,0 +1,14 @@
+.response-block {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+
+  .title {
+    font-size: 18px;
+  }
+
+  .detail {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
