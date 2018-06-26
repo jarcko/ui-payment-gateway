@@ -107,17 +107,17 @@
             *ngIf="providerConfig"
             [providerUrl]="providerConfig.iframeUrl"
             [params]="providerConfig.formParams"
-            [hideIframe]="providerValidationDetails && providerValidationDetails.responseType"
+            [hideIframe]="providerValidationDetails && providerValidationDetails.Alias"
             (updateSpinner)="setSpinner(1, false)">
           </app-ingenico-iframe>
 
           <app-card-confirmed
-            *ngIf="providerValidationDetails && providerValidationDetails.responseType"></app-card-confirmed>
+            *ngIf="providerValidationDetails && providerValidationDetails.Alias"></app-card-confirmed>
 
-          <app-response-block
-            *ngIf="providerValidationDetails && providerValidationDetails.responseType"
-            [validationDetails]="providerValidationDetails">
-          </app-response-block>
+          <!--<app-response-block-->
+            <!--*ngIf="providerValidationDetails && providerValidationDetails.responseType"-->
+            <!--[validationDetails]="providerValidationDetails">-->
+          <!--</app-response-block>-->
 
         </div>
       </div>

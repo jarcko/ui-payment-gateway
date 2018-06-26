@@ -30,7 +30,24 @@ export interface CardInfo {
 }
 
 export interface ProviderValidationDetails {
-  responseType: string;
-  key: string;
-  value: string;
+  Alias: {
+    AliasId: string;
+    NCError: string;
+    NCErrorCardNo: string;
+    NCErrorCN: string;
+    NCErrorCVC: string;
+    NCErrorED: string;
+    OrderId: string;
+    Status: string;
+    StorePermanently: string;
+  };
+  Card: {
+    Bin: string;
+    Brand: string;
+    CardNumber: string;
+    CardHolderName: string;
+    Cvc: string;
+    ExpiryDate: string;
+  };
+  SHASign: string;
 }

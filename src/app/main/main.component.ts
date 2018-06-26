@@ -17,7 +17,7 @@ export class MainComponent implements OnInit {
   baseUrl: string;
   gatewayUrl = 'http://payment-gateway-1-qa.thomascook.io:8080';
   isDevMode = /localhost/i.test(window.location.href);
-  jwtEnabled = false;
+  jwtEnabled = true;
   key = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29raW5ncyByZXF1ZXN0In0.' +
     'OqtiU5v7iDO47tq8oeWu6rBaf0R25YDR1m9ouwsZV-ApHYQhD5FdZ8xqJ6dlibbUoM98_4MDO3feVcdytOnm7Q';
 
@@ -53,42 +53,6 @@ export class MainComponent implements OnInit {
     this._listenPostMessage();
   }
 
-  onGetProvidersClick() {
-    this._defineBaseUrl();
-    this.notificationService.resetNotification();
-    this.spinners[0] = true;
-    this.communicationService.get(this.baseUrl + '/api/paymentProviders/', null, this.jwtEnabled ? this.key : null)
-      .subscribe(
-        (data: Providers) => this._savePaymentProviders(data.enabledPaymentProviders),
-        (err) => {
-          this.notificationService.pushNotification(err.error);
-          this.spinners[0] = false;
-
-        }
-      );
-  }
-
-  getConfig() {
-    this._defineBaseUrl();
-    this.notificationService.resetNotification();
-    if (this.selectedProviderName) {
-      this.spinners[1] = true;
-      const options = this.providerConfigFrom.getRawValue();
-      this.communicationService.get(
-        `${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/config/`, options, this.jwtEnabled ? this.key : null
-      )
-        .subscribe(
-          (data: ProviderConfig) => this.providerConfig = data,
-          (err) => {
-            this.notificationService.pushNotification(err.error);
-            this.spinners[1] = false;
-          }
-        );
-    } else {
-      this.snackbar.open('Please select Payment Provider', 'Something missed');
-    }
-  }
-
   queryTx() {
     this._defineBaseUrl();
     this.notificationService.resetNotification();
@@ -107,6 +71,41 @@ export class MainComponent implements OnInit {
     }
   }
 
+  onGetProvidersClick() {
+    this._defineBaseUrl();
+    this.notificationService.resetNotification();
+    this.spinners[0] = true;
+    this.communicationService.get(this.baseUrl + '/api/paymentProviders/', null, this.jwtEnabled ? this.key : null)
+      .subscribe(
+        (data: Providers) => this._savePaymentProviders(data.enabledPaymentProviders),
+        (err) => {
+          this.notificationService.pushNotification(err.error);
+          this.spinners[0] = false;
+        }
+      );
+  }
+
+  getConfig() {
+    this._defineBaseUrl();
+    this.notificationService.resetNotification();
+    if (this.selectedProviderName) {
+      this.spinners[1] = true;
+      const options = this.providerConfigFrom.getRawValue();
+      this.communicationService.get(
+        `${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/config/`, options, this.jwtEnabled ? this.key : null
+      )
+        .subscribe(
+          (data: ProviderConfig) => this.providerConfig = data,
+          (err) => {
+            this.notificationService.pushNotification(err.error);
+            this.removeSpinners();
+          }
+        );
+    } else {
+      this.snackbar.open('Please select Payment Provider', 'Something missed');
+    }
+  }
+
   private _defineBaseUrl() {
     this.baseUrl = this.isDevMode ? this.gatewayUrl : window.location.href;
   }
@@ -122,19 +121,22 @@ export class MainComponent implements OnInit {
   }
 
   private _listenPostMessage() {
-      return this.eventManager.addGlobalEventListener('window', 'message', (e: MessageEvent) => {
-      if (e.data.responseType === 'cardValidation') {
+    return this.eventManager.addGlobalEventListener('window', 'message', (e: MessageEvent) => {
+      if (e.data.Alias) {
         this.providerValidationDetails = e.data;
+        console.log(e.data);
       }
     });
   }
 
   setSpinner(spinnerNumber: number, value: boolean) {
-    this.spinners[spinnerNumber - 1] = value;
+    this.spinners[spinnerNumber] = value;
   }
 
   removeSpinners() {
-    this
+    this.spinners.forEach((el, index: number) => {
+      this.spinners[index] = false;
+    });
   }
 
 }
