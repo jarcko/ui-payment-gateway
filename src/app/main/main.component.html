@@ -112,12 +112,14 @@
           </app-ingenico-iframe>
 
           <app-card-confirmed
-            *ngIf="providerValidationDetails && providerValidationDetails.Alias"></app-card-confirmed>
+            *ngIf="providerValidationDetails && providerValidationDetails.Alias"
+            [cardInfo]="providerValidationDetails.Card">
+          </app-card-confirmed>
 
-          <!--<app-response-block-->
-            <!--*ngIf="providerValidationDetails && providerValidationDetails.responseType"-->
-            <!--[validationDetails]="providerValidationDetails">-->
-          <!--</app-response-block>-->
+          <app-response-block
+            *ngIf="providerValidationDetails && providerValidationDetails.Alias"
+            [validationDetails]="providerValidationDetails">
+          </app-response-block>
 
         </div>
       </div>

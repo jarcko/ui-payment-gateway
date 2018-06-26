@@ -23,31 +23,29 @@ export interface FormParameter {
   value: string;
 }
 
-export interface CardInfo {
-  brand: string;
-  number: string;
-  holderName: string;
+export interface Alias {
+  AliasId: string;
+  NCError: string;
+  NCErrorCardNo: string;
+  NCErrorCN: string;
+  NCErrorCVC: string;
+  NCErrorED: string;
+  OrderId: string;
+  Status: string;
+  StorePermanently: string;
+}
+
+export interface Card {
+  Bin: string;
+  Brand: string;
+  CardNumber: string;
+  CardHolderName: string;
+  Cvc: string;
+  ExpiryDate: string;
 }
 
 export interface ProviderValidationDetails {
-  Alias: {
-    AliasId: string;
-    NCError: string;
-    NCErrorCardNo: string;
-    NCErrorCN: string;
-    NCErrorCVC: string;
-    NCErrorED: string;
-    OrderId: string;
-    Status: string;
-    StorePermanently: string;
-  };
-  Card: {
-    Bin: string;
-    Brand: string;
-    CardNumber: string;
-    CardHolderName: string;
-    Cvc: string;
-    ExpiryDate: string;
-  };
+  Alias: Alias;
+  Card: Card;
   SHASign: string;
 }

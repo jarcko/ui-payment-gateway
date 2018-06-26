@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CardInfo } from '../main.interfaces';
+import { Component, Input, OnInit } from '@angular/core';
+import { Card } from '../main.interfaces';
 
 @Component({
   selector: 'app-card-confirmed',
@@ -7,19 +7,12 @@ import { CardInfo } from '../main.interfaces';
   styleUrls: ['./card-confirmed.component.scss']
 })
 export class CardConfirmedComponent implements OnInit {
-  cardInfo: CardInfo;
-
-  CARD_MOCK = {
-    brand: 'AMERICAN_EXPRESS',
-    number: '**** **** **** 0144',
-    holderName: 'Ben Carson',
-  };
+  @Input() cardInfo: Card;
 
   constructor() {
   }
 
   ngOnInit() {
-    this.cardInfo = this.CARD_MOCK;
   }
 
 }
