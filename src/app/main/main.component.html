@@ -57,7 +57,7 @@
 
           <button mat-raised-button class="mat-accent" (click)="onGetProvidersClick()">Get Payment Providers</button>
 
-          <mat-progress-spinner *ngIf="spinners.length && spinners[0]" class="spinner" mode="indeterminate" [color]="'accent'"
+          <mat-progress-spinner *ngIf="spinners[0]" class="spinner" mode="indeterminate" [color]="'accent'"
             [diameter]="50">
           </mat-progress-spinner>
 
@@ -97,7 +97,7 @@
         <div class="step-border">
           <div class="step-title">Step 3:</div>
 
-          <div class="text-reference" *ngIf="!spinner2 && !providerConfig">Iframe will be populated here</div>
+          <div class="text-reference" *ngIf="!spinners[1] && !providerConfig">Iframe will be populated here</div>
 
           <mat-progress-spinner *ngIf="spinners[1]" class="spinner1" mode="indeterminate" [color]="'accent'"
             [diameter]="50">
