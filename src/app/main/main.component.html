@@ -99,14 +99,17 @@
 
 
           <mat-form-field class="mat-select card-type">
-            <mat-select placeholder="Card Type" [(value)]="selectedCardType">
+            <mat-select placeholder="Card Type"
+              [(value)]="selectedCardType"
+              [disabled]="providerValidationDetails && providerValidationDetails.Alias">
+
               <mat-option value="VI">Visa Credit</mat-option>
-              <mat-option value="">Visa Debit</mat-option>
-              <mat-option value="">Visa Electron</mat-option>
-              <mat-option value="">Maestro</mat-option>
-              <mat-option value="">MasterCard Credit</mat-option>
-              <mat-option value="">MasterCard Debit</mat-option>
-              <mat-option value="">American Express</mat-option>
+              <mat-option value="VD">Visa Debit</mat-option>
+              <mat-option value="VE">Visa Electron</mat-option>
+              <mat-option value="MA">Maestro</mat-option>
+              <mat-option value="MC">MasterCard Credit</mat-option>
+              <mat-option value="MD">MasterCard Debit</mat-option>
+              <mat-option value="AX">American Express</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -120,17 +123,18 @@
             *ngIf="providerConfig"
             [providerUrl]="providerConfig.iframeUrl"
             [params]="providerConfig.formParams"
-            [hideIframe]="providerValidationDetails && providerValidationDetails.Alias"
+            [hideIframe]="providerValidationDetails"
             (updateSpinner)="setSpinner(1, false)">
           </app-ingenico-iframe>
 
           <app-card-confirmed
-            *ngIf="providerValidationDetails && providerValidationDetails.Alias"
-            [cardInfo]="providerValidationDetails.Card">
+            *ngIf="providerValidationDetails"
+            [cardInfo]="providerValidationDetails.Card"
+            (changeCard)="onChangeCard()">
           </app-card-confirmed>
 
           <app-response-block
-            *ngIf="providerValidationDetails && providerValidationDetails.Alias"
+            *ngIf="providerValidationDetails"
             [rawResponse]="providerValidationDetails">
           </app-response-block>
 
@@ -148,8 +152,8 @@
           </mat-progress-spinner>
 
           <app-response-block
-            *ngIf="cardDetailsRS && cardDetailsRS.length"
-            [response]="cardDetailsRS">
+            *ngIf="cardDetailsRS && isResponsePresent(cardDetailsRS)"
+            [rawResponse]="cardDetailsRS">
           </app-response-block>
 
         </div>
@@ -159,6 +163,16 @@
         <div class="step-border">
           <div class="step-title">Step 5:</div>
 
+          <div class="money-amount">
+            <mat-form-field>
+              <input matInput type="text"
+                placeholder="Amount GBP"
+                [disabled]="authorizeRS && isResponsePresent(authorizeRS)"
+                [(ngModel)]="moneyAmount">
+
+            </mat-form-field>
+          </div>
+
           <button mat-raised-button class="mat-accent" (click)="authorize()">Authorize</button>
 
           <mat-progress-spinner *ngIf="spinners[3]" class="spinner" mode="indeterminate" [color]="'accent'"
@@ -166,8 +180,8 @@
           </mat-progress-spinner>
 
           <app-response-block
-            *ngIf="false"
-            [response]="null">
+            *ngIf="authorizeRS && isResponsePresent(authorizeRS)"
+            [rawResponse]="authorizeRS">
           </app-response-block>
 
         </div>
@@ -175,17 +189,18 @@
 
       <div class="step-container">
         <div class="step-border">
-          <div class="step-title">Step 6:</div>
+          <div class="step-title">Step 6: [ ignore this step in case of Happy Path ]</div>
+          <div></div>
 
-          <button mat-raised-button class="mat-accent" (click)="capture()">Capture</button>
+          <button mat-raised-button class="mat-accent" (click)="cancelAuthorization()">Cancel Authorization</button>
 
           <mat-progress-spinner *ngIf="spinners[4]" class="spinner" mode="indeterminate" [color]="'accent'"
             [diameter]="50">
           </mat-progress-spinner>
 
           <app-response-block
-            *ngIf="false"
-            [response]="null">
+            *ngIf="cancelRS && isResponsePresent(cancelRS)"
+            [rawResponse]="cancelRS">
           </app-response-block>
 
         </div>
@@ -195,15 +210,15 @@
         <div class="step-border">
           <div class="step-title last">Step 7:</div>
 
-          <button mat-raised-button class="mat-accent" (click)="cancelAuthorization()">Cancel Authorization</button>
+          <button mat-raised-button class="mat-accent" (click)="capture()">Capture</button>
 
           <mat-progress-spinner *ngIf="spinners[5]" class="spinner" mode="indeterminate" [color]="'accent'"
             [diameter]="50">
           </mat-progress-spinner>
 
           <app-response-block
-            *ngIf="false"
-            [response]="null">
+            *ngIf="captureRS && isResponsePresent(captureRS)"
+            [rawResponse]="captureRS">
           </app-response-block>
 
         </div>

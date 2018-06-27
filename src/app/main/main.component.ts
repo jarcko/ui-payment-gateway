@@ -16,28 +16,51 @@ import { DataConversionService } from './data-conversion.service';
 
 export class MainComponent implements OnInit {
   baseUrl: string;
-  gatewayUrl = 'http://payment-gateway-1-qa.thomascook.io:8080';
+  gatewayUrl = 'http://payment-gateway-1-integration.thomascook.io:8080';
   isDevMode = /localhost/i.test(window.location.href);
   jwtEnabled = true;
   key = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJib29raW5ncyByZXF1ZXN0In0.' +
     'OqtiU5v7iDO47tq8oeWu6rBaf0R25YDR1m9ouwsZV-ApHYQhD5FdZ8xqJ6dlibbUoM98_4MDO3feVcdytOnm7Q';
 
   orderId = 'test-page-' + new Date().toJSON().slice(0, 19);
-  paymentProviders: string[];
-  selectedProviderName: string;
-
-  providerConfigFrom: FormGroup;
-  providerConfig: ProviderConfig;
   spinners: boolean[] = [];
-
-  selectedCardType: string;
-
-  providerValidationDetails: ProviderValidationDetails;
-  cardDetailsRS: KeyValueObject[];
 
   selectState = 'orderId';
   queryTxValue: string;
-  queryTxResponse: Object;
+  selectedProviderName: string;
+  selectedCardType: string;
+  moneyAmount: number;
+
+  paymentProviders: string[];
+  providerConfigFrom: FormGroup;
+  providerConfig: ProviderConfig;
+  providerValidationDetails: ProviderValidationDetails;
+  queryTxRS: Object;
+  cardDetailsRS: Object;
+  authorizeRS: Object;
+  cancelRS: Object;
+  captureRS: Object;
+
+  FRAUD_PARAMS = {
+    OWNERADDRESS: '100 WARDOUR STREET',
+    AIFLDATE2: '20191022',
+    AIFLDATE1: '20191015',
+    AIDESTCITYL2: 'London Gatwick',
+    REMOTE_ADDR: '127.0.0.1',
+    OWNERZIP: 'W1F0TN',
+    AIDESTCITYL1: 'Paphos',
+    OWNERTELNO: '12333333333',
+    EMAIL: 'igor.jarko@thomascookonline.com',
+    AIPASNAME: 'Mr Igor Jarko',
+    AIORCITY1: 'LGW',
+    AIORCITY2: 'PFO',
+    AICARRIER1: 'MT',
+    AICARRIER2: 'MT',
+    AIDESTCITY1: 'PFO',
+    AIDESTCITY2: 'LGW',
+    AIORCITYL2: 'Paphos',
+    AIORCITYL1: 'London Gatwick'
+  };
 
   constructor(private communicationService: CommunicationService,
               private notificationService: NotificationService,
@@ -58,6 +81,7 @@ export class MainComponent implements OnInit {
     this._listenPostMessage();
   }
 
+  // TODO Finish Query section afterwards
   queryTx() {
     this._preSetup(10);
     if (this.queryTxValue) {
@@ -67,7 +91,7 @@ export class MainComponent implements OnInit {
         `${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/tx/query`, options, this.jwtEnabled ? this.key : null
       )
         .subscribe(
-          (data: Object) => this.queryTxResponse = data,
+          (data: Object) => this.queryTxRS = data,
           (err) => this.notificationService.pushNotification(err.error)
         );
     } else {
@@ -81,14 +105,16 @@ export class MainComponent implements OnInit {
       .subscribe(
         (data: Providers) => this._savePaymentProviders(data.enabledPaymentProviders),
         (err) => {
+          this.removeSpinners();
           this.notificationService.pushNotification(err.error);
-          this.spinners[0] = false;
         }
       );
   }
 
   getConfig() {
     this._preSetup(1);
+    this.providerConfig = null;
+
     if (this.selectedProviderName) {
       const options = this.providerConfigFrom.getRawValue();
       this.communicationService.get(
@@ -97,8 +123,8 @@ export class MainComponent implements OnInit {
         .subscribe(
           (data: ProviderConfig) => this.providerConfig = data,
           (err) => {
-            this.notificationService.pushNotification(err.error);
             this.removeSpinners();
+            this.notificationService.pushNotification(err.error);
           }
         );
     } else {
@@ -109,6 +135,8 @@ export class MainComponent implements OnInit {
 
   postCardDetails() {
     this._preSetup(2);
+    this.cardDetailsRS = null;
+
     const body = {
       tokenizationParams: this.convertIngenicoResponse(this.providerValidationDetails),
       paymentProvider: this.selectedProviderName,
@@ -117,80 +145,116 @@ export class MainComponent implements OnInit {
 
     this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/cardDetails/`, body)
       .subscribe(
-        (data) => {
-          console.log(data);
-          this.cardDetailsRS = <KeyValueObject[]>data;
+        (data: Object) => {
+          this.removeSpinners();
+          this.cardDetailsRS = data;
+          console.log('cardDetailsRS', data);
         },
         (err) => {
-          this.notificationService.pushNotification(err.error);
           this.removeSpinners();
-          console.log(err);
+          this.notificationService.pushNotification(err.error);
+          console.log('cardDetailsER', err);
         }
       );
+  }
 
+  onChangeCard() {
+    this.providerValidationDetails = null;
   }
 
   authorize() {
     this._preSetup(3);
-    const body = {
+    this.authorizeRS = null;
 
+    const form = this.providerConfigFrom.getRawValue();
+    const body = {
+      paymentProvider: this.selectedProviderName,
+      orderId: this.cardDetailsRS ?
+        (this.cardDetailsRS.cardAliasInfo ? this.cardDetailsRS.cardAliasInfo.orderId : null) :
+        null,
+      acceptUrl: form.acceptUrl,
+      declineUrl: form.exceptionUrl,
+      exceptionUrl: form.exceptionUrl,
+      amountCops: this.moneyAmount * 100,
+      currency: 'GBP',
+      language: 'en_US',
+      templateName: 'newuser.html',
+      cardType: this.selectedCardType,
+      fraudParams: this.dataConversionService.objectToKeyValueArray(this.FRAUD_PARAMS)
     };
 
-    this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/cardDetails/`, body)
+    this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/tx/authorize`, body)
       .subscribe(
-        (data) => {
-          console.log(data);
-          this.cardDetailsRS = <KeyValueObject[]>data;
+        (data: Object) => {
+          this.removeSpinners();
+          this.authorizeRS = data;
+          console.log('authorizeRS', data);
         },
         (err) => {
-          this.notificationService.pushNotification(err.error);
           this.removeSpinners();
-          console.log(err);
+          this.notificationService.pushNotification(err.error);
+          console.log('authorizeER', err);
         }
       );
-
-  }
-
-  capture() {
-    this._preSetup(4);
-    const body = {
-
-    };
-
-    this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/cardDetails/`, body)
-      .subscribe(
-        (data) => {
-          console.log(data);
-          this.cardDetailsRS = <KeyValueObject[]>data;
-        },
-        (err) => {
-          this.notificationService.pushNotification(err.error);
-          this.removeSpinners();
-          console.log(err);
-        }
-      );
-
   }
 
   cancelAuthorization() {
-    this._preSetup(5);
-    const body = {
+    this._preSetup(4);
+    this.cancelRS = null;
 
+    const body = {
+      paymentProvider: this.selectedProviderName,
+      orderId: this.cardDetailsRS ?
+        (this.cardDetailsRS.cardAliasInfo ? this.cardDetailsRS.cardAliasInfo.orderId : null) :
+        null,
+      currency: 'GBP',
+      amountCops: this.moneyAmount * 100
     };
 
-    this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/cardDetails/`, body)
+    this.communicationService.put(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/tx/cancel`, body)
       .subscribe(
-        (data) => {
-          console.log(data);
-          this.cardDetailsRS = <KeyValueObject[]>data;
+        (data: Object) => {
+          this.removeSpinners();
+          this.cancelRS = data;
+          console.log('cancelRS', data);
         },
         (err) => {
-          this.notificationService.pushNotification(err.error);
           this.removeSpinners();
-          console.log(err);
+          this.notificationService.pushNotification(err.error);
+          console.log('cancelER', err);
         }
       );
+  }
 
+  capture() {
+    this._preSetup(5);
+    this.captureRS = null;
+
+    const body = {
+      paymentProvider: this.selectedProviderName,
+      orderId: this.cardDetailsRS ?
+        (this.cardDetailsRS.cardAliasInfo ? this.cardDetailsRS.cardAliasInfo.orderId : null) :
+        null,
+      currency: 'GBP',
+      amountCops: this.moneyAmount * 100
+      // amountCops: this.authorizeRS ?
+      //   (this.authorizeRS.amountCops >= 0 ? this.authorizeRS.amountCops : null) :
+      //   null
+    };
+
+    this.communicationService.put(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/tx/capture`, body)
+      .subscribe(
+        (data: Object) => {
+          this.removeSpinners();
+          this.captureRS = data;
+          console.log('captureRS', data);
+        },
+        (err) => {
+          this.removeSpinners();
+          this.notificationService.pushNotification(err.error);
+          console.log('captureER', err);
+        }
+      );
   }
 
   convertIngenicoResponse(response): KeyValueObject[] {
@@ -205,6 +269,10 @@ export class MainComponent implements OnInit {
     this.spinners.forEach((el, index: number) => {
       this.spinners[index] = false;
     });
+  }
+
+  isResponsePresent(obj): boolean {
+    return !!Object.keys(obj).length;
   }
 
   private _defineBaseUrl() {

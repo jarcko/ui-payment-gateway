@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewInit, OnChanges } from '@angular/core';
 import { FormParameter } from '../main.interfaces';
 
 @Component({
@@ -6,7 +6,7 @@ import { FormParameter } from '../main.interfaces';
   templateUrl: './ingenico-iframe.component.html',
   styleUrls: ['./ingenico-iframe.component.scss']
 })
-export class IngenicoIframeComponent implements OnInit, AfterViewInit {
+export class IngenicoIframeComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Input() providerUrl: string;
   @Input() params: FormParameter[];
@@ -18,7 +18,10 @@ export class IngenicoIframeComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this._submit();
-    // this.updateSpinner.emit(false);
+  }
+
+  ngOnChanges() {
+    this._submit();
   }
 
   ngAfterViewInit() {

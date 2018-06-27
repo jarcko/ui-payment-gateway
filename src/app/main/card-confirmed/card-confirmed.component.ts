@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { Card } from '../main.interfaces';
 
 @Component({
@@ -8,11 +8,16 @@ import { Card } from '../main.interfaces';
 })
 export class CardConfirmedComponent implements OnInit {
   @Input() cardInfo: Card;
+  @Output() changeCard = new EventEmitter();
 
   constructor() {
   }
 
   ngOnInit() {
+  }
+
+  changeCardClick() {
+    this.changeCard.emit();
   }
 
 }

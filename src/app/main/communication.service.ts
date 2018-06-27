@@ -29,4 +29,8 @@ export class CommunicationService {
   post(path: string, body: Object) {
     return this.httpClient.post(path, body);
   }
+
+  put(path: string, body: Object) {
+    return this.httpClient.put(path, body);
+  }
 }
