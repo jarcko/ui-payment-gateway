@@ -97,6 +97,19 @@
         <div class="step-border">
           <div class="step-title">Step 3:</div>
 
+
+          <mat-form-field class="mat-select card-type">
+            <mat-select placeholder="Card Type" [(value)]="selectedCardType">
+              <mat-option value="VI">Visa Credit</mat-option>
+              <mat-option value="">Visa Debit</mat-option>
+              <mat-option value="">Visa Electron</mat-option>
+              <mat-option value="">Maestro</mat-option>
+              <mat-option value="">MasterCard Credit</mat-option>
+              <mat-option value="">MasterCard Debit</mat-option>
+              <mat-option value="">American Express</mat-option>
+            </mat-select>
+          </mat-form-field>
+
           <div class="text-reference" *ngIf="!spinners[1] && !providerConfig">Iframe will be populated here</div>
 
           <mat-progress-spinner *ngIf="spinners[1]" class="spinner1" mode="indeterminate" [color]="'accent'"
@@ -118,7 +131,7 @@
 
           <app-response-block
             *ngIf="providerValidationDetails && providerValidationDetails.Alias"
-            [response]="convertIngenicoResponse(providerValidationDetails)">
+            [rawResponse]="providerValidationDetails">
           </app-response-block>
 
         </div>

@@ -8,10 +8,15 @@ import { KeyValueObject } from '../main.interfaces';
 })
 export class ResponseBlockComponent implements OnInit {
 
-  @Input() response: KeyValueObject;
+  @Input() response?: KeyValueObject;
+  @Input() rawResponse?: Object;
+
+  humanReadableRS: string;
+
   constructor() { }
 
   ngOnInit() {
+    this.humanReadableRS = JSON.stringify(this.rawResponse, null, 2);
   }
 
 }

@@ -30,6 +30,8 @@ export class MainComponent implements OnInit {
   providerConfig: ProviderConfig;
   spinners: boolean[] = [];
 
+  selectedCardType: string;
+
   providerValidationDetails: ProviderValidationDetails;
   cardDetailsRS: KeyValueObject[];
 
@@ -110,7 +112,7 @@ export class MainComponent implements OnInit {
     const body = {
       tokenizationParams: this.convertIngenicoResponse(this.providerValidationDetails),
       paymentProvider: this.selectedProviderName,
-      cardType: this.providerValidationDetails && this.providerValidationDetails.Card.Brand
+      cardType: this.selectedCardType
     };
 
     this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/cardDetails/`, body)

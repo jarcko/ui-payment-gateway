@@ -1,7 +1,18 @@
 <div class="response-block">
-  <div class="title">Response details:</div>
-  <div *ngFor="let element of response" class="detail">
-    <div class="property">{{ element.key }}</div>
-    <div>{{ element.value }}</div>
+
+  <div *ngIf="response">
+    <div class="title">Response details:</div>
+    <div *ngFor="let element of response" class="detail">
+      <div class="property">{{ element.key }}</div>
+      <div>{{ element.value }}</div>
+    </div>
   </div>
+
+  <div *ngIf="rawResponse">
+    <div class="raw-resp-title">Response:</div>
+    <pre class="raw-resp">
+      {{humanReadableRS}}
+    </pre>
+  </div>
+
 </div>

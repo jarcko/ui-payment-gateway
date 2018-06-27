@@ -1,7 +1,7 @@
 .response-block {
   display: flex;
   flex-direction: column;
-  width: 97%;
+  width: 96%;
   margin-top: 12px;
   padding: 2px 12px 8px 12px;
   border: 1px dashed #d3d3d3;
@@ -12,6 +12,13 @@
     font-size: 16px;
     padding-top: 5px;
     padding-bottom: 5px;
+  }
+
+  .raw-resp-title {
+    font-size: 16px;
+    padding-top: 5px;
+    color: #5e2828;
+    text-decoration: underline;
   }
 
   .detail {
@@ -25,5 +32,12 @@
       color: #5e2828;
     }
 
+  }
+
+  .raw-resp {
+    font-size: 12px;
+    color: #565656;
+    margin-left: -8px;
+    overflow: auto;
   }
 }

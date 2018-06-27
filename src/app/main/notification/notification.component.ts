@@ -17,7 +17,9 @@ export class NotificationComponent implements OnInit, OnDestroy {
     this.notificationService.notificationSubject.subscribe(
       (data: Notification) => {
         this.notification = data;
-        window.scrollTo(0, 0);
+        if (Object.keys(data).length) {
+          window.scrollTo(0, 0);
+        }
       }
     );
   }
