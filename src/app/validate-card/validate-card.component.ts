@@ -19,7 +19,7 @@ export class ValidateCardComponent implements OnInit {
       .replace(/\+/g, ' ')
       .replace(/=/g, '":"');
 
-    const parsedByDefault = JSON.parse('{"' + params + '"}');
+    const parsedByDefault = JSON.parse('{"' + decodeURIComponent(params) + '"}');
     this.message = this.parse(parsedByDefault);
     window.parent.postMessage(this.message, window.parent.location.href);
   }

@@ -6,7 +6,7 @@
   <div *ngIf="notification.code" class="header">Error code: {{notification.code}}</div>
 
   <p *ngIf="notification.message" class="text">{{'Status ' + notification.status + ': ' + notification.message}}</p>
-  <div *ngIf="notification.messages.length">
+  <div *ngIf="notification.messages && notification.messages.length">
     <p *ngFor="let message of notification.messages" class="text">{{message}}</p>
   </div>
 </div>
