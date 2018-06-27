@@ -31,6 +31,7 @@ export class MainComponent implements OnInit {
   spinners: boolean[] = [];
 
   providerValidationDetails: ProviderValidationDetails;
+  cardDetailsRS: KeyValueObject[];
 
   selectState = 'orderId';
   queryTxValue: string;
@@ -114,7 +115,10 @@ export class MainComponent implements OnInit {
 
     this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/cardDetails/`, body)
       .subscribe(
-        (data) => console.log(data),
+        (data) => {
+          console.log(data);
+          this.cardDetailsRS = <KeyValueObject[]>data;
+        },
         (err) => {
           this.notificationService.pushNotification(err.error);
           this.removeSpinners();

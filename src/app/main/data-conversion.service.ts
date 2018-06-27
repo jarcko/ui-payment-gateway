@@ -32,6 +32,27 @@ export class DataConversionService {
     return this.convertArrayToKeyValueObjectsArray(obj2);
   }
 
+  whichKeyContainsArray(obj) {
+    const allKeys: string[] = Object.keys(obj);
+    let result = null;
+    allKeys.forEach((key) => {
+      if (Array.isArray(obj[key])) {
+        result = key;
+      }
+    });
+    return result;
+  }
+
+  makeRsArrayKeyValue(obj): KeyValueObject[] {
+    const keyContainsArray = this.whichKeyContainsArray(obj);
+    const converted = this.objectToKeyValueArray(obj);
+    if (!keyContainsArray) {
+      return converted;
+    } else {
+      return [...converted, ...obj[keyContainsArray]];
+    }
+  }
+
   private _parsePath(path, obj): string | number | boolean {
     let result = obj;
     path.split('.').forEach((key) => {

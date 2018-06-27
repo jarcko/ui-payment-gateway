@@ -130,9 +130,13 @@
 
           <button mat-raised-button class="mat-accent" (click)="postCardDetails()">Send Card Details</button>
 
+          <mat-progress-spinner *ngIf="spinners[2]" class="spinner" mode="indeterminate" [color]="'accent'"
+            [diameter]="50">
+          </mat-progress-spinner>
+
           <app-response-block
-            *ngIf="false"
-            [response]="null">
+            *ngIf="cardDetailsRS.length"
+            [response]="cardDetailsRS">
           </app-response-block>
 
         </div>
