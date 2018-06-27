@@ -146,7 +146,11 @@
         <div class="step-border">
           <div class="step-title">Step 5:</div>
 
-          <button mat-raised-button class="mat-accent">Authorize</button>
+          <button mat-raised-button class="mat-accent" (click)="authorize()">Authorize</button>
+
+          <mat-progress-spinner *ngIf="spinners[3]" class="spinner" mode="indeterminate" [color]="'accent'"
+            [diameter]="50">
+          </mat-progress-spinner>
 
           <app-response-block
             *ngIf="false"
@@ -160,7 +164,11 @@
         <div class="step-border">
           <div class="step-title">Step 6:</div>
 
-          <button mat-raised-button class="mat-accent">Capture</button>
+          <button mat-raised-button class="mat-accent" (click)="capture()">Capture</button>
+
+          <mat-progress-spinner *ngIf="spinners[4]" class="spinner" mode="indeterminate" [color]="'accent'"
+            [diameter]="50">
+          </mat-progress-spinner>
 
           <app-response-block
             *ngIf="false"
@@ -174,7 +182,11 @@
         <div class="step-border">
           <div class="step-title last">Step 7:</div>
 
-          <button mat-raised-button class="mat-accent">Cancel Authorization</button>
+          <button mat-raised-button class="mat-accent" (click)="cancelAuthorization()">Cancel Authorization</button>
+
+          <mat-progress-spinner *ngIf="spinners[5]" class="spinner" mode="indeterminate" [color]="'accent'"
+            [diameter]="50">
+          </mat-progress-spinner>
 
           <app-response-block
             *ngIf="false"

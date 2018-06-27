@@ -128,6 +128,69 @@ export class MainComponent implements OnInit {
 
   }
 
+  authorize() {
+    this._preSetup(3);
+    const body = {
+
+    };
+
+    this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/cardDetails/`, body)
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.cardDetailsRS = <KeyValueObject[]>data;
+        },
+        (err) => {
+          this.notificationService.pushNotification(err.error);
+          this.removeSpinners();
+          console.log(err);
+        }
+      );
+
+  }
+
+  capture() {
+    this._preSetup(4);
+    const body = {
+
+    };
+
+    this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/cardDetails/`, body)
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.cardDetailsRS = <KeyValueObject[]>data;
+        },
+        (err) => {
+          this.notificationService.pushNotification(err.error);
+          this.removeSpinners();
+          console.log(err);
+        }
+      );
+
+  }
+
+  cancelAuthorization() {
+    this._preSetup(5);
+    const body = {
+
+    };
+
+    this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/cardDetails/`, body)
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.cardDetailsRS = <KeyValueObject[]>data;
+        },
+        (err) => {
+          this.notificationService.pushNotification(err.error);
+          this.removeSpinners();
+          console.log(err);
+        }
+      );
+
+  }
+
   convertIngenicoResponse(response): KeyValueObject[] {
     return response ? this.dataConversionService.objectToKeyValueArray(response) : null;
   }
