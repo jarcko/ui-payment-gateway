@@ -135,7 +135,7 @@
           </mat-progress-spinner>
 
           <app-response-block
-            *ngIf="cardDetailsRS.length"
+            *ngIf="cardDetailsRS && cardDetailsRS.length"
             [response]="cardDetailsRS">
           </app-response-block>
 
