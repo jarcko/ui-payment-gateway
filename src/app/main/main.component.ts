@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommunicationService } from './communication.service';
-import { ProviderConfig, Providers, ProviderValidationDetails } from './main.interfaces';
+import { KeyValueObject, ProviderConfig, Providers, ProviderValidationDetails } from './main.interfaces';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from './notification/notification.service';
 import { MatSnackBar } from '@angular/material';
 import { EventManager } from '@angular/platform-browser';
+import { DataConversionService } from './data-conversion.service';
 
 
 @Component({
@@ -37,6 +38,7 @@ export class MainComponent implements OnInit {
 
   constructor(private communicationService: CommunicationService,
               private notificationService: NotificationService,
+              private dataConversionService: DataConversionService,
               private fb: FormBuilder,
               private eventManager: EventManager,
               public snackbar: MatSnackBar) {
@@ -54,8 +56,7 @@ export class MainComponent implements OnInit {
   }
 
   queryTx() {
-    this._defineBaseUrl();
-    this.notificationService.resetNotification();
+    this._preSetup(10);
     if (this.queryTxValue) {
       const options = {};
       options[this.selectState] = this.queryTxValue;
@@ -72,9 +73,7 @@ export class MainComponent implements OnInit {
   }
 
   onGetProvidersClick() {
-    this._defineBaseUrl();
-    this.notificationService.resetNotification();
-    this.spinners[0] = true;
+    this._preSetup(0);
     this.communicationService.get(this.baseUrl + '/api/paymentProviders/', null, this.jwtEnabled ? this.key : null)
       .subscribe(
         (data: Providers) => this._savePaymentProviders(data.enabledPaymentProviders),
@@ -86,10 +85,8 @@ export class MainComponent implements OnInit {
   }
 
   getConfig() {
-    this._defineBaseUrl();
-    this.notificationService.resetNotification();
+    this._preSetup(1);
     if (this.selectedProviderName) {
-      this.spinners[1] = true;
       const options = this.providerConfigFrom.getRawValue();
       this.communicationService.get(
         `${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/config/`, options, this.jwtEnabled ? this.key : null
@@ -102,12 +99,53 @@ export class MainComponent implements OnInit {
           }
         );
     } else {
+      this.removeSpinners();
       this.snackbar.open('Please select Payment Provider', 'Something missed');
     }
   }
 
+  postCardDetails() {
+    this._preSetup(2);
+    const body = {
+      tokenizationParams: this.convertIngenicoResponse(this.providerValidationDetails),
+      paymentProvider: this.selectedProviderName,
+      cardType: this.providerValidationDetails && this.providerValidationDetails.Card.Brand
+    };
+
+    this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/cardDetails/`, body)
+      .subscribe(
+        (data) => console.log(data),
+        (err) => {
+          this.notificationService.pushNotification(err.error);
+          this.removeSpinners();
+          console.log(err);
+        }
+      );
+
+  }
+
+  convertIngenicoResponse(response): KeyValueObject[] {
+    return response ? this.dataConversionService.objectToKeyValueArray(response) : null;
+  }
+
+  setSpinner(spinnerNumber: number, value: boolean) {
+    this.spinners[spinnerNumber] = value;
+  }
+
+  removeSpinners() {
+    this.spinners.forEach((el, index: number) => {
+      this.spinners[index] = false;
+    });
+  }
+
   private _defineBaseUrl() {
     this.baseUrl = this.isDevMode ? this.gatewayUrl : window.location.href;
+  }
+
+  private _preSetup(num: number) {
+    this._defineBaseUrl();
+    this.notificationService.resetNotification();
+    this.spinners[num] = true;
   }
 
   private _savePaymentProviders(providers: string[]): void {
@@ -126,16 +164,6 @@ export class MainComponent implements OnInit {
         this.providerValidationDetails = e.data;
         console.log(e.data);
       }
-    });
-  }
-
-  setSpinner(spinnerNumber: number, value: boolean) {
-    this.spinners[spinnerNumber] = value;
-  }
-
-  removeSpinners() {
-    this.spinners.forEach((el, index: number) => {
-      this.spinners[index] = false;
     });
   }
 

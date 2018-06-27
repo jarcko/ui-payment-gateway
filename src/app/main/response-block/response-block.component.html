@@ -1,7 +1,7 @@
 <div class="response-block">
   <div class="title">Response details:</div>
-  <div *ngFor="let detail of validationDetails" class="detail">
-    <div>{{ detail.key }}</div>
-    <div>{{ detail.value }}</div>
+  <div *ngFor="let element of response" class="detail">
+    <div class="property">{{ element.key }}</div>
+    <div>{{ element.value }}</div>
   </div>
 </div>

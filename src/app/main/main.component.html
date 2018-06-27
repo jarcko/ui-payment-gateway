@@ -118,7 +118,7 @@
 
           <app-response-block
             *ngIf="providerValidationDetails && providerValidationDetails.Alias"
-            [validationDetails]="providerValidationDetails">
+            [response]="convertIngenicoResponse(providerValidationDetails)">
           </app-response-block>
 
         </div>
@@ -128,11 +128,11 @@
         <div class="step-border">
           <div class="step-title">Step 4:</div>
 
-          <button mat-raised-button class="mat-accent">Send Card Details</button>
+          <button mat-raised-button class="mat-accent" (click)="postCardDetails()">Send Card Details</button>
 
           <app-response-block
             *ngIf="false"
-            [validationDetails]="null">
+            [response]="null">
           </app-response-block>
 
         </div>
@@ -146,7 +146,7 @@
 
           <app-response-block
             *ngIf="false"
-            [validationDetails]="null">
+            [response]="null">
           </app-response-block>
 
         </div>
@@ -160,7 +160,7 @@
 
           <app-response-block
             *ngIf="false"
-            [validationDetails]="null">
+            [response]="null">
           </app-response-block>
 
         </div>
@@ -174,7 +174,7 @@
 
           <app-response-block
             *ngIf="false"
-            [validationDetails]="null">
+            [response]="null">
           </app-response-block>
 
         </div>

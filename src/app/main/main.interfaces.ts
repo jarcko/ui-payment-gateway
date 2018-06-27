@@ -1,10 +1,12 @@
 export interface Notification {
   timestamp: number;
   status: number;
-  error: string;
-  exception: string;
-  message: string;
-  path: string;
+  code?: number;
+  error?: string;
+  exception?: string;
+  message?: string;
+  messages: string[];
+  path?: string;
 }
 
 export interface Providers {
@@ -48,4 +50,9 @@ export interface ProviderValidationDetails {
   Alias: Alias;
   Card: Card;
   SHASign: string;
+}
+
+export interface KeyValueObject {
+  key: string;
+  value: string | number | boolean;
 }

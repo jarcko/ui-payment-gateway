@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ProviderValidationDetails } from '../main.interfaces';
+import { KeyValueObject } from '../main.interfaces';
 
 @Component({
   selector: 'app-response-block',
@@ -8,7 +8,7 @@ import { ProviderValidationDetails } from '../main.interfaces';
 })
 export class ResponseBlockComponent implements OnInit {
 
-  @Input() validationDetails: ProviderValidationDetails;
+  @Input() response: KeyValueObject;
   constructor() { }
 
   ngOnInit() {

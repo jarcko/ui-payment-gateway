@@ -1,8 +1,13 @@
 <div class="notification"
   *ngIf="notification && notification.status"
-  [ngClass]="{'error': notification.error, 'success': !notification.error }">
+  [ngClass]="{'error': notification.error || notification.code, 'success': !notification.error && !notification.code}">
 
-  <div class="header">{{notification.error}}</div>
-  <p class="text">{{notification.status + ': ' + notification.message}}</p>
+  <div *ngIf="notification.error" class="header">{{notification.error}}</div>
+  <div *ngIf="notification.code" class="header">Error code: {{notification.code}}</div>
+
+  <p *ngIf="notification.message" class="text">{{'Status ' + notification.status + ': ' + notification.message}}</p>
+  <div *ngIf="notification.messages.length">
+    <p *ngFor="let message of notification.messages" class="text">{{message}}</p>
+  </div>
 </div>
 
