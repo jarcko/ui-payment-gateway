@@ -1,5 +1,7 @@
 # UiPaymentGateway
 
+Node v8.11.3 or higher.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
 
 to install run
@@ -7,8 +9,6 @@ to install run
 ```bash
 npm install -g @angular/cli
 ```
-
-Node v8.11.3 or higher.
 
 ## Development server
 
