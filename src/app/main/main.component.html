@@ -16,12 +16,21 @@
       <div class="query-section">
         <div class="inputs">
           <mat-form-field>
-            <input matInput type="text" placeholder="Enter value" (ngModel)="query.orderId">
+            <input matInput type="text" placeholder="Enter value" [(ngModel)]="enteredQueryValue">
           </mat-form-field>
         </div>
 
         <button mat-raised-button class="mat-basic" (click)="queryTx()">Query</button>
       </div>
+
+      <mat-progress-spinner *ngIf="spinners[6]" mode="indeterminate" [color]="'accent'"
+        [diameter]="50">
+      </mat-progress-spinner>
+
+      <app-response-block
+        *ngIf="queryTxRS"
+        [rawResponse]="queryTxRS">
+      </app-response-block>
 
     </div>
   </div>
@@ -167,13 +176,14 @@
             <mat-form-field>
               <input matInput type="text"
                 placeholder="Amount GBP"
-                [disabled]="authorizeRS && isResponsePresent(authorizeRS)"
                 [(ngModel)]="enteredMoneyAmount">
 
             </mat-form-field>
           </div>
 
           <button mat-raised-button class="mat-accent" (click)="authorize()">Authorize</button>
+
+          <button mat-raised-button class="mat-accent btn-3ds" (click)="authorize3ds()">Authorize 3DS</button>
 
           <mat-progress-spinner *ngIf="spinners[3]" class="spinner" mode="indeterminate" [color]="'accent'"
             [diameter]="50">

@@ -26,7 +26,7 @@ export class MainComponent implements OnInit {
   spinners: boolean[] = [];
 
   selectState = 'orderId';
-  queryTxValue: string;
+  enteredQueryValue: string;
   selectedProviderName: string;
   selectedCardType: CardTypeEnum;
   enteredMoneyAmount: number;
@@ -81,18 +81,26 @@ export class MainComponent implements OnInit {
     this._listenPostMessage();
   }
 
-  // TODO Finish Query section afterwards
   queryTx() {
-    this._preSetup(10);
-    if (this.queryTxValue) {
+    this._preSetup(6);
+    this.queryTxRS = null;
+    if (this.enteredQueryValue) {
       const options = {};
-      options[this.selectState] = this.queryTxValue;
+      options[this.selectState] = this.enteredQueryValue;
       this.communicationService.get(
         `${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/tx/query`, options, this.jwtEnabled ? this.key : null
       )
         .subscribe(
-          (data: Object) => this.queryTxRS = data,
-          (err) => this.notificationService.pushNotification(err.error)
+          (data: Object) => {
+            this.removeSpinners();
+            this.queryTxRS = data;
+            console.log('queryTxRS:', data);
+          },
+          (err) => {
+            this.removeSpinners();
+            this.notificationService.pushNotification(err.error);
+            console.log('queryTxER:', err);
+          }
         );
     } else {
       this.snackbar.open('Please specify transaction ID', 'Something missed');
@@ -148,12 +156,12 @@ export class MainComponent implements OnInit {
         (data: CardDetailsRS) => {
           this.removeSpinners();
           this.cardDetailsRS = data;
-          console.log('cardDetailsRS', data);
+          console.log('cardDetailsRS:', data);
         },
         (err) => {
           this.removeSpinners();
           this.notificationService.pushNotification(err.error);
-          console.log('cardDetailsER', err);
+          console.log('cardDetailsER:', err);
         }
       );
   }
@@ -188,14 +196,19 @@ export class MainComponent implements OnInit {
         (data: Object) => {
           this.removeSpinners();
           this.authorizeRS = data;
-          console.log('authorizeRS', data);
+          console.log('authorizeRS:', data);
         },
         (err) => {
           this.removeSpinners();
           this.notificationService.pushNotification(err.error);
-          console.log('authorizeER', err);
+          console.log('authorizeER:', err);
         }
       );
+  }
+  // TODO implement method
+  authorize3ds() {
+    console.log('not implemented method');
+    this.snackbar.open('This feature will be implemented a bit later', 'Not yet implemented');
   }
 
   cancelAuthorization() {
@@ -216,12 +229,12 @@ export class MainComponent implements OnInit {
         (data: Object) => {
           this.removeSpinners();
           this.cancelRS = data;
-          console.log('cancelRS', data);
+          console.log('cancelRS:', data);
         },
         (err) => {
           this.removeSpinners();
           this.notificationService.pushNotification(err.error);
-          console.log('cancelER', err);
+          console.log('cancelER:', err);
         }
       );
   }
@@ -247,12 +260,12 @@ export class MainComponent implements OnInit {
         (data: Object) => {
           this.removeSpinners();
           this.captureRS = data;
-          console.log('captureRS', data);
+          console.log('captureRS:', data);
         },
         (err) => {
           this.removeSpinners();
           this.notificationService.pushNotification(err.error);
-          console.log('captureER', err);
+          console.log('captureER:', err);
         }
       );
   }
