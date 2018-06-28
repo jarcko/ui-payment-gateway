@@ -1,4 +1,4 @@
-# UiPaymentGateway
+# PaymentGatewayUi
 
 Node v8.11.3 or higher.
 
