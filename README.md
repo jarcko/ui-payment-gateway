@@ -21,7 +21,6 @@ If you have installed @angular/CLI globally just run
 ng build --prod --build-optimizer
 
 otherwise run
-
 npm install @angular/cli
 ng build --prod --build-optimizer --output-path="{yourPath}"
 
