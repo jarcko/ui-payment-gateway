@@ -56,3 +56,36 @@ export interface KeyValueObject {
   key: string;
   value: string | number | boolean;
 }
+
+export interface CardDetailsRS {
+  cardAliasInfo: {
+    aliasId: string;
+    orderId: string;
+    cardBin: string;
+    cardBrand: string;
+    cardNumber: string;
+    cardHolderName: string;
+    cardCvc: string;
+    cardExpiryDate: string;
+    aliasNCError: string;
+    aliasNCErrorCardNo: string;
+    aliasNCErrorCardNumber: string;
+    aliasNCErrorCardCvc: string;
+    aliasNCErrorCardExpiryDate: string;
+    aliasStatus: string;
+    aliasStorePermanently: string;
+  };
+  paymentProvider: string;
+  paymentProviderResponseValid: boolean;
+  cardType: CardTypeEnum;
+}
+
+export enum CardTypeEnum {
+  VI = 'VI',
+  VD = 'VD',
+  VE = 'VE',
+  MA = 'MA',
+  MC = 'MC',
+  MD = 'MD',
+  AX = 'AX'
+}

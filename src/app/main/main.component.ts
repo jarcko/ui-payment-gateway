@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommunicationService } from './communication.service';
-import { KeyValueObject, ProviderConfig, Providers, ProviderValidationDetails } from './main.interfaces';
+import { CardDetailsRS, CardTypeEnum, KeyValueObject, ProviderConfig, Providers, ProviderValidationDetails } from './main.interfaces';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from './notification/notification.service';
 import { MatSnackBar } from '@angular/material';
@@ -28,15 +28,15 @@ export class MainComponent implements OnInit {
   selectState = 'orderId';
   queryTxValue: string;
   selectedProviderName: string;
-  selectedCardType: string;
-  moneyAmount: number;
+  selectedCardType: CardTypeEnum;
+  enteredMoneyAmount: number;
 
   paymentProviders: string[];
   providerConfigFrom: FormGroup;
   providerConfig: ProviderConfig;
   providerValidationDetails: ProviderValidationDetails;
   queryTxRS: Object;
-  cardDetailsRS: Object;
+  cardDetailsRS: CardDetailsRS;
   authorizeRS: Object;
   cancelRS: Object;
   captureRS: Object;
@@ -145,7 +145,7 @@ export class MainComponent implements OnInit {
 
     this.communicationService.post(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/cardDetails/`, body)
       .subscribe(
-        (data: Object) => {
+        (data: CardDetailsRS) => {
           this.removeSpinners();
           this.cardDetailsRS = data;
           console.log('cardDetailsRS', data);
@@ -175,7 +175,7 @@ export class MainComponent implements OnInit {
       acceptUrl: form.acceptUrl,
       declineUrl: form.exceptionUrl,
       exceptionUrl: form.exceptionUrl,
-      amountCops: this.moneyAmount * 100,
+      amountCops: this.enteredMoneyAmount * 100,
       currency: 'GBP',
       language: 'en_US',
       templateName: 'newuser.html',
@@ -208,7 +208,7 @@ export class MainComponent implements OnInit {
         (this.cardDetailsRS.cardAliasInfo ? this.cardDetailsRS.cardAliasInfo.orderId : null) :
         null,
       currency: 'GBP',
-      amountCops: this.moneyAmount * 100
+      amountCops: this.enteredMoneyAmount * 100
     };
 
     this.communicationService.put(`${this.baseUrl}/api/paymentProviders/${this.selectedProviderName}/tx/cancel`, body)
@@ -236,7 +236,7 @@ export class MainComponent implements OnInit {
         (this.cardDetailsRS.cardAliasInfo ? this.cardDetailsRS.cardAliasInfo.orderId : null) :
         null,
       currency: 'GBP',
-      amountCops: this.moneyAmount * 100
+      amountCops: this.enteredMoneyAmount * 100
       // amountCops: this.authorizeRS ?
       //   (this.authorizeRS.amountCops >= 0 ? this.authorizeRS.amountCops : null) :
       //   null
