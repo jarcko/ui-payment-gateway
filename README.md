@@ -17,8 +17,8 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Build on server
 
-If you have installed @angular/CLI globally just
-run ng build --prod --build-optimizer
+If you have installed @angular/CLI globally just run 
+ng build --prod --build-optimizer
 
 otherwise run
 
