@@ -2,7 +2,10 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
 
-Node Version 8.11.3 or higher.
+to install run
+npm install -g @angular/cli
+
+Node v8.11.3 or higher.
 
 ## Development server
 
@@ -14,7 +17,13 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Build on server
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+If you have installed @angular/CLI globally just
+run ng build --prod --build-optimizer
+
+otherwise run
+
+npm install @angular/cli
+ng build --prod --build-optimizer --output-path="{yourPath}"
 
 ## Running unit tests
 
