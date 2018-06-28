@@ -3,7 +3,10 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
 
 to install run
+
+```bash
 npm install -g @angular/cli
+```
 
 Node v8.11.3 or higher.
 
@@ -17,13 +20,18 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Build on server
 
-If you have installed @angular/CLI globally just run 
-ng build --prod --build-optimizer
+- If you have installed @angular/CLI globally just run
 
-otherwise run
+```bash
+ng build --prod --build-optimizer
+```
+
+- otherwise run
+
+```bash
 npm install @angular/cli
 ng build --prod --build-optimizer --output-path="{yourPath}"
-
+```
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
